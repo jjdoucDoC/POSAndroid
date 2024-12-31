@@ -29,7 +29,7 @@
                 android:id="@+id/list_image"
                 android:layout_width="106dp"
                 android:layout_height="86dp"
-                android:scaleType="centerCrop" />
+                android:scaleType="fitCenter" />
 
         </androidx.cardview.widget.CardView>
 

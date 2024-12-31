@@ -3,8 +3,8 @@ package com.example.posapp.fragments
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
+import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -28,7 +28,7 @@ class CashierFragment : Fragment() {
 
     private var isGridView = true
     private lateinit var productList: List<Products>
-    private lateinit var cartList: MutableList<Products>
+    private lateinit var cartList: MutableMap<Products, Int>    // Lưu sản phẩm và số lượng
     private lateinit var databases: Databases
 
     // Declare binding
@@ -49,7 +49,10 @@ class CashierFragment : Fragment() {
 
         databases = Databases(requireContext())
         productList = databases.getProduct()
-        cartList = mutableListOf()
+        cartList = mutableMapOf()
+
+        // Default Cart container is hide
+        binding.cartContainer.visibility = View.GONE
 
         updateView()
 
@@ -66,7 +69,7 @@ class CashierFragment : Fragment() {
             updateView()
         }
 
-        binding.cartIcon.setOnClickListener {
+        binding.cartContainer.setOnClickListener {
             showBottomCartSheet()
         }
 
@@ -94,32 +97,67 @@ class CashierFragment : Fragment() {
 
     // Add to cart handle event
     private fun addToCart (product: Products) {
-        cartList.add(product)
+        if (cartList.containsKey(product)) {
+            cartList[product] = cartList[product]!! + 1
+        } else {
+            cartList[product] = 1
+        }
+
+        cartContainerVisible()
+    }
+
+    // Show Cart container when Cart is not empty
+    private fun cartContainerVisible() {
+        binding.cartContainer.visibility =
+            if (cartList.isNotEmpty()) View.VISIBLE else View.GONE
     }
 
     // Show bottom cart sheet
+    @SuppressLint("NotifyDataSetChanged")
     private fun showBottomCartSheet() {
+        // Create a BottomSheetDialog
         val bottomSheetDialog = BottomSheetDialog(requireContext())
         val bottomSheetView = layoutInflater.inflate(R.layout.bottom_sheet_cart, null)
         bottomSheetDialog.setContentView(bottomSheetView)
 
-        val recyclerView = bottomSheetView.findViewById<RecyclerView>(R.id.order_cart_list)
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        recyclerView.adapter = CartAdapter(requireContext(), cartList)
+        // Set up RecyclerView to show the list of cart items
+        val cartRecyclerView = bottomSheetView.findViewById<RecyclerView>(R.id.order_cart_list)
+        cartRecyclerView.layoutManager = LinearLayoutManager(requireContext())  // Set layout for list
 
+        cartRecyclerView.adapter = CartAdapter(requireContext(), cartList, {
+            // Callback to update the quantity
+            product, quantity ->
+            if (quantity == 0) {
+                // Remove product if quantity = 0
+                cartList.remove(product)
+                cartRecyclerView.adapter?.notifyDataSetChanged()    // Refresh RecyclerView
+                if (cartList.isEmpty()) {
+                    bottomSheetDialog.dismiss()
+                    binding.cartContainer.visibility = View.GONE
+                }
+            } else {
+                // Update cart with new quantiy
+                cartList[product] = quantity
+            }
+        }, { product ->
+            // Remove product from cart when clicked
+            cartList.remove(product)
+            cartRecyclerView.adapter?.notifyDataSetChanged()
+            if (cartList.isEmpty()) {
+                bottomSheetDialog.dismiss()
+                binding.cartContainer.visibility = View.GONE
+            }
+        })
+
+        // Set up NestedScrollView
         val scrollView = bottomSheetView.findViewById<NestedScrollView>(R.id.scrollView)
-
         val maxItemCount = 3
         val itemHeight = 300
         val maxHeight = maxItemCount * itemHeight
 
-        if (cartList.size <= maxItemCount) {
-            // Height enough to hold item
-            scrollView.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
-        } else {
-            // Height limit to 3 item
-            scrollView.layoutParams.height = maxHeight
-        }
+        // Adjust ScrollView height
+        scrollView.layoutParams.height =
+            if (cartList.size <= maxItemCount) ViewGroup.LayoutParams.WRAP_CONTENT else maxHeight
 
         bottomSheetDialog.show()
     }

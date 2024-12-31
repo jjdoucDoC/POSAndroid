@@ -32,7 +32,7 @@
                 android:id="@+id/product_order_image"
                 android:layout_width="106dp"
                 android:layout_height="86dp"
-                android:scaleType="centerCrop" />
+                android:scaleType="fitCenter" />
         </androidx.cardview.widget.CardView>
 
         <TextView
@@ -74,7 +74,6 @@
             app:layout_constraintTop_toBottomOf="@+id/product_category_order" />
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/reduce_orderPro_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
@@ -84,7 +83,7 @@
             app:layout_constraintEnd_toStartOf="@+id/order_product_quantity">
 
             <ImageView
-                android:id="@+id/imageView8"
+                android:id="@+id/decrease_quantity_btn"
                 android:layout_width="36dp"
                 android:layout_height="32dp"
                 android:background="@color/grey"
@@ -103,7 +102,7 @@
             app:layout_constraintEnd_toEndOf="parent">
 
             <ImageView
-                android:id="@+id/add_orderPro_btn"
+                android:id="@+id/increase_quantity_btn"
                 android:layout_width="36dp"
                 android:layout_height="32dp"
                 android:background="@color/main_color"
