@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@color/selected_menu_item_color"
+        android:state_checked="true">
+        <shape android:shape="rectangle">
+            <corners android:radius="8dp"/>
+        </shape>
+    </item>
+    <item android:drawable="@color/main_color">
+        <shape android:shape="rectangle">
+            <corners android:radius="8dp"/>
+        </shape>
+    </item>
+</selector>

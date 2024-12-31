@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn = "navigation_view">
+
+    <group android:checkableBehavior="single">
+
+        <item android:id="@+id/nav_cashier"
+            android:icon="@drawable/cashier_ic"
+            android:title="Cashier"/>
+
+        <item android:id="@+id/nav_history_order"
+            android:icon="@drawable/history_ic"
+            android:title="History Transaction"/>
+
+        <item android:id="@+id/nav_report"
+            android:icon="@drawable/report_ic"
+            android:title="Report"/>
+
+        <item android:id="@+id/nav_manage_store"
+            android:icon="@drawable/store_ic"
+            android:title="Manage Store"/>
+
+        <item android:id="@+id/nav_account"
+            android:icon="@drawable/store_ic"
+            android:title="Account"/>
+
+    </group>
+
+</menu>
