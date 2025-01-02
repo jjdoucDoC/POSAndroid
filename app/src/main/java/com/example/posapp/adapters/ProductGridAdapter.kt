@@ -2,12 +2,10 @@ package com.example.posapp.adapters
 
 import android.content.Context
 import android.graphics.BitmapFactory
-import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.posapp.Databases
 import com.example.posapp.models.Products
 import com.example.posapp.databinding.GridItemProductBinding
 import java.text.NumberFormat

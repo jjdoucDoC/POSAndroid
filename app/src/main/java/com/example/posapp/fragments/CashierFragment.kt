@@ -4,6 +4,8 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -20,16 +22,21 @@ import com.example.posapp.adapters.ProductGridAdapter
 import com.example.posapp.adapters.ProductListAdapter
 import com.example.posapp.models.Products
 import com.example.posapp.R
+import com.example.posapp.activities.OrderActivity
 import com.example.posapp.adapters.CartAdapter
 import com.example.posapp.databinding.FragmentCashierBinding
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import java.text.NumberFormat
+import java.util.Locale
 
 class CashierFragment : Fragment() {
 
     private var isGridView = true
     private lateinit var productList: List<Products>
-    private lateinit var cartList: MutableMap<Products, Int>    // Lưu sản phẩm và số lượng
+    private lateinit var cartList: MutableMap<Products, Int>    // Key(Product) - Value(Int)
     private lateinit var databases: Databases
+
+    private val REQUEST_CODE_PLACE_ORDER = 1
 
     // Declare binding
     private var _binding: FragmentCashierBinding? = null    // biến _binding để lưu trữ binding và giải phóng nó khi view bị hủy
@@ -73,6 +80,11 @@ class CashierFragment : Fragment() {
             showBottomCartSheet()
         }
 
+        binding.addOrderBtn.setOnClickListener {
+            val intent = Intent(requireContext(), OrderActivity::class.java)
+            intent.putExtra("cartList", HashMap(cartList))
+            startActivityForResult(intent, REQUEST_CODE_PLACE_ORDER)
+        }
     }
 
     // Switch between GridView and ListView Product function
@@ -103,17 +115,45 @@ class CashierFragment : Fragment() {
             cartList[product] = 1
         }
 
-        cartContainerVisible()
+        updateCart()
     }
 
-    // Show Cart container when Cart is not empty
-    private fun cartContainerVisible() {
+    // Update Cart Function
+    @SuppressLint("SetTextI18n")
+    private fun updateCart (bottomSheetDialog: BottomSheetDialog? = null) {
+        val totalItems = cartList.values.sum()
+        val totalPrice = cartList.entries.sumOf {
+            it.key.price * it.value
+        }
+
+        binding.countProductOrder.text = "$totalItems items"
+        binding.totalPriceOrder.text = "Total: ${formatCurrency(totalPrice)}"
+
+        // Update BottomSheetDialog height
+        bottomSheetDialog?.let {
+            val scrollView = it.findViewById<NestedScrollView>(R.id.scrollView)
+            val maxItemCount = 3
+            val itemHeight = resources.getDimensionPixelSize(R.dimen.cart_item_height)
+            val maxHeight = maxItemCount * itemHeight
+
+            scrollView?.layoutParams?.height =
+                if (cartList.size <= maxItemCount) ViewGroup.LayoutParams.WRAP_CONTENT else maxHeight
+            scrollView?.requestLayout()
+        }
+
+        // Show Cart container when cart is not empty
         binding.cartContainer.visibility =
             if (cartList.isNotEmpty()) View.VISIBLE else View.GONE
     }
 
+    // Format Currency Function
+    private fun formatCurrency(amount: Int): String {
+        val formatter = NumberFormat.getNumberInstance(Locale("vi", "VN"))
+        return "đ ${formatter.format(amount)}"
+    }
+
     // Show bottom cart sheet
-    @SuppressLint("NotifyDataSetChanged")
+    @SuppressLint("NotifyDataSetChanged", "InflateParams")
     private fun showBottomCartSheet() {
         // Create a BottomSheetDialog
         val bottomSheetDialog = BottomSheetDialog(requireContext())
@@ -121,12 +161,11 @@ class CashierFragment : Fragment() {
         bottomSheetDialog.setContentView(bottomSheetView)
 
         // Set up RecyclerView to show the list of cart items
-        val cartRecyclerView = bottomSheetView.findViewById<RecyclerView>(R.id.order_cart_list)
+        val cartRecyclerView = bottomSheetView.findViewById<RecyclerView>(R.id.cart_list)
         cartRecyclerView.layoutManager = LinearLayoutManager(requireContext())  // Set layout for list
 
-        cartRecyclerView.adapter = CartAdapter(requireContext(), cartList, {
+        cartRecyclerView.adapter = CartAdapter(requireContext(), cartList, { product, quantity ->
             // Callback to update the quantity
-            product, quantity ->
             if (quantity == 0) {
                 // Remove product if quantity = 0
                 cartList.remove(product)
@@ -135,9 +174,11 @@ class CashierFragment : Fragment() {
                     bottomSheetDialog.dismiss()
                     binding.cartContainer.visibility = View.GONE
                 }
+                updateCart(bottomSheetDialog)
             } else {
                 // Update cart with new quantiy
                 cartList[product] = quantity
+                updateCart(bottomSheetDialog)
             }
         }, { product ->
             // Remove product from cart when clicked
@@ -147,72 +188,71 @@ class CashierFragment : Fragment() {
                 bottomSheetDialog.dismiss()
                 binding.cartContainer.visibility = View.GONE
             }
+            updateCart(bottomSheetDialog)
         })
 
-        // Set up NestedScrollView
-        val scrollView = bottomSheetView.findViewById<NestedScrollView>(R.id.scrollView)
-        val maxItemCount = 3
-        val itemHeight = 300
-        val maxHeight = maxItemCount * itemHeight
-
-        // Adjust ScrollView height
-        scrollView.layoutParams.height =
-            if (cartList.size <= maxItemCount) ViewGroup.LayoutParams.WRAP_CONTENT else maxHeight
-
+        updateCart(bottomSheetDialog)
         bottomSheetDialog.show()
     }
 
     // Add to cart animation function
     private fun addToCartAnimation(startView: View) {
-        // Get starting position
-        val startLoc = IntArray(2)
-        startView.getLocationOnScreen(startLoc)
+        startView.post {
+            val startLoc = IntArray(2)
+            startView.getLocationOnScreen(startLoc)
 
-        // Get final postion
-        val finalLoc = IntArray(2)
-        binding.cartIcon.getLocationOnScreen(finalLoc)
+            val finalLoc = IntArray(2)
+            binding.cartIcon.getLocationOnScreen(finalLoc)
 
-        val startX = startLoc[0] + startView.width - 80
-        val startY = startLoc[1] + startView.height - 250
-        val finalX = finalLoc[0] + binding.cartIcon.width / 2
-        val finalY = finalLoc[1] + binding.cartIcon.height / 2
+            val startX = startLoc[0] + startView.width - 80
+            val startY = startLoc[1] + startView.height - 250
+            val finalX = finalLoc[0] + binding.cartIcon.width / 2
+            val finalY = finalLoc[1] + binding.cartIcon.height / 2
 
-        // Create dot view
-        val dotView = ImageView(requireContext())
-        dotView.setImageResource(R.drawable.dot)
-        val params = RelativeLayout.LayoutParams(65, 65)
-        binding.root.addView(dotView, params)
+            val dotView = ImageView(requireContext())
+            dotView.setImageResource(R.drawable.dot)
+            val params = RelativeLayout.LayoutParams(65, 65)
+            binding.root.addView(dotView, params)
 
-        // Animate dot with a parabolic path
-        val anim = ValueAnimator.ofFloat(0f, 1f)
-        anim.addUpdateListener {
-            val fraction = it.animatedFraction
+            val anim = ValueAnimator.ofFloat(0f, 1f)
+            anim.addUpdateListener {
+                val fraction = it.animatedFraction
 
-            // X increases linearly from startX to finalX
-            val currentX = startX + fraction * (finalX - startX)
-            // Y follows a parabolic curve
-            val currentY = startY + fraction * (finalY - startY) - (600 * (1 - 4 * (fraction - 0.5f) * (fraction - 0.5f)))
+                val currentX = startX + fraction * (finalX - startX)
+                val currentY = startY + fraction * (finalY - startY) - (570 * (1 - 4 * (fraction - 0.5f) * (fraction - 0.5f)))
 
-            dotView.translationX = currentX
-            dotView.translationY = currentY
-        }
-
-        anim.duration = 600
-
-        anim.addListener(object : AnimatorListenerAdapter() {
-            override fun onAnimationEnd(animation: Animator) {
-                super.onAnimationEnd(animation)
-                binding.root.removeView(dotView) // Remove dot after animation
+                dotView.translationX = currentX
+                dotView.translationY = currentY
             }
-        })
 
-        anim.start()
+            anim.duration = 660
+
+            anim.addListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator) {
+                    super.onAnimationEnd(animation)
+                    binding.root.removeView(dotView)
+                }
+            })
+
+            anim.start()
+        }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         // Giải phóng binding khi fragment bị hủy
         _binding = null
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_CODE_PLACE_ORDER && resultCode == Activity.RESULT_OK) {
+            val clearCart = data?.getBooleanExtra("clearCart", false) ?: false
+            if (clearCart) {
+                cartList.clear()
+                updateCart()
+            }
+        }
     }
 
 }

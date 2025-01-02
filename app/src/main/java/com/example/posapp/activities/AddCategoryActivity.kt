@@ -4,10 +4,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.example.posapp.Databases
-import com.example.posapp.R
 import com.example.posapp.databinding.ActivityAddCategoryBinding
 import com.example.posapp.models.Categories
 

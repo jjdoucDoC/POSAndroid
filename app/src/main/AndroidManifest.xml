@@ -16,6 +16,9 @@
         android:theme="@style/Theme.PoSApp"
         tools:targetApi="31">
         <activity
+            android:name=".activities.OrderActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.EditCategoryActivity"
             android:exported="false" />
         <activity

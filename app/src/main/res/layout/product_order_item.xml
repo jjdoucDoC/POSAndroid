@@ -6,21 +6,17 @@
     android:layout_height="wrap_content">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout11"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/view10"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0">
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/cardView9"
+            android:id="@+id/cardView10"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             app:cardBackgroundColor="@color/white"
             app:cardCornerRadius="15dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -29,10 +25,11 @@
             app:layout_constraintVertical_bias="0.0">
 
             <ImageView
-                android:id="@+id/product_order_image"
-                android:layout_width="106dp"
-                android:layout_height="86dp"
-                android:scaleType="fitCenter" />
+                android:id="@+id/product_image_order"
+                android:layout_width="58dp"
+                android:layout_height="58dp"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/image_ic" />
         </androidx.cardview.widget.CardView>
 
         <TextView
@@ -40,98 +37,50 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="14dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="8dp"
             android:fontFamily="@font/rubik_medium"
             android:text="Product Name"
             android:textColor="@color/text_color"
-            android:textSize="14sp"
-            app:layout_constraintStart_toEndOf="@+id/cardView9"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:textSize="16sp"
+            app:layout_constraintStart_toEndOf="@+id/cardView10"
+            app:layout_constraintTop_toTopOf="@+id/cardView10" />
 
         <TextView
-            android:id="@+id/product_category_order"
+            android:id="@+id/product_quantity_order"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
+            android:layout_marginTop="5dp"
             android:fontFamily="@font/rubik_regular"
-            android:maxLines="2"
-            android:text="Category"
+            android:text="quantity"
             android:textColor="@color/text_color"
-            android:textSize="12sp"
+            android:textSize="13sp"
+            app:layout_constraintBottom_toBottomOf="@+id/cardView10"
             app:layout_constraintStart_toStartOf="@+id/product_name_order"
-            app:layout_constraintTop_toBottomOf="@+id/product_name_order" />
+            app:layout_constraintTop_toBottomOf="@+id/product_name_order"
+            app:layout_constraintVertical_bias="0.0" />
 
         <TextView
-            android:id="@+id/product_price_order"
+            android:id="@+id/product_subtotal_order"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:fontFamily="@font/rubik_medium"
-            android:text="Price"
-            android:textColor="@color/main_color"
-            android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="@+id/product_category_order"
-            app:layout_constraintTop_toBottomOf="@+id/product_category_order" />
-
-        <androidx.cardview.widget.CardView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            app:cardCornerRadius="10dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/order_product_quantity">
-
-            <ImageView
-                android:id="@+id/decrease_quantity_btn"
-                android:layout_width="36dp"
-                android:layout_height="32dp"
-                android:background="@color/grey"
-                android:scaleType="centerCrop"
-                app:srcCompat="@drawable/minus_ic" />
-        </androidx.cardview.widget.CardView>
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cardView8"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            app:cardCornerRadius="10dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
-
-            <ImageView
-                android:id="@+id/increase_quantity_btn"
-                android:layout_width="36dp"
-                android:layout_height="32dp"
-                android:background="@color/main_color"
-                app:srcCompat="@drawable/baseline_add_24" />
-        </androidx.cardview.widget.CardView>
-
-        <TextView
-            android:id="@+id/order_product_quantity"
-            android:layout_width="32dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:text="1"
-            android:textAlignment="center"
             android:fontFamily="@font/rubik_regular"
-            android:textSize="16sp"
+            android:text="Price"
             android:textColor="@color/text_color"
-            app:layout_constraintBottom_toBottomOf="@+id/cardView8"
-            app:layout_constraintEnd_toStartOf="@+id/cardView8"
-            app:layout_constraintTop_toTopOf="@+id/cardView8" />
-
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@+id/product_quantity_order"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/product_name_order" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <View
-        android:id="@+id/view10"
+        android:id="@+id/view13"
         android:layout_width="0dp"
         android:layout_height="0.5dp"
-        android:layout_marginStart="16dp"
+        android:layout_marginTop="12dp"
         android:background="@color/stroke_grey"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout11"
+        app:layout_constraintVertical_bias="0.0" />
 </androidx.constraintlayout.widget.ConstraintLayout>

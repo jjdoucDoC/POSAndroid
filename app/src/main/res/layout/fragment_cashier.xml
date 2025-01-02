@@ -150,7 +150,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cashier_footer"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="68dp"
         android:background="@color/grey"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -159,17 +159,17 @@
         <androidx.cardview.widget.CardView
             android:id="@+id/cart_container"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_marginStart="24dp"
-            android:layout_marginTop="8dp"
             android:layout_marginEnd="24dp"
-            android:layout_marginBottom="8dp"
             android:backgroundTint="@color/main_color"
             app:cardCornerRadius="5dp"
+            app:cardElevation="4dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -193,28 +193,42 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
+                    android:layout_marginTop="3dp"
                     android:fontFamily="@font/rubik_medium"
                     android:text="8 Items"
                     android:textColor="@color/white"
-                    android:textSize="16sp"
-                    app:layout_constraintBottom_toBottomOf="@+id/cartIcon"
+                    android:textSize="13sp"
                     app:layout_constraintStart_toEndOf="@+id/cartIcon"
-                    app:layout_constraintTop_toTopOf="@+id/cartIcon" />
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/total_price_order"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="21dp"
-                    android:layout_marginEnd="20dp"
-                    android:layout_marginBottom="20dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="3dp"
                     android:fontFamily="@font/rubik_medium"
                     android:text="Total: d89.00"
                     android:textColor="@color/white"
                     android:textSize="16sp"
+                    app:layout_constraintStart_toEndOf="@+id/cartIcon"
+                    app:layout_constraintTop_toBottomOf="@+id/count_product_order" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/add_order_btn"
+                    android:layout_width="150dp"
+                    android:layout_height="0dp"
+                    android:background="@color/white"
+                    android:fontFamily="@font/rubik_medium"
+                    android:text="Thanh toán"
+                    android:textAlignment="center"
+                    android:textAllCaps="false"
+                    android:textColor="@color/main_color"
+                    android:textSize="16sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.0" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
     </androidx.constraintlayout.widget.ConstraintLayout>

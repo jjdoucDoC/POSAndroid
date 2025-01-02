@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.posapp.Databases
-import com.example.posapp.databinding.ProductOrderItemBinding
+import com.example.posapp.databinding.ProductSheetItemBinding
 import com.example.posapp.models.Products
 import java.text.NumberFormat
 import java.util.Locale
@@ -22,20 +22,20 @@ class CartAdapter(
 
     private val databases : Databases = Databases(context)
 
-    class CartViewHolder(private val binding: ProductOrderItemBinding) :
+    class CartViewHolder(private val binding: ProductSheetItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        val productName = binding.productNameOrder
-        val priceView = binding.productPriceOrder
-        val catName = binding.productCategoryOrder
-        val productImage = binding.productOrderImage
-        val quantityView = binding.orderProductQuantity
+        val productName = binding.productNameOrderSheet
+        val priceView = binding.productPriceOrderSheet
+        val catName = binding.productCategoryOrderSheet
+        val productImage = binding.productOrderSheetImage
+        val quantityView = binding.orderSheetProductQuantity
         val decreaseButton = binding.decreaseQuantityBtn
         val increaseButton = binding.increaseQuantityBtn
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartViewHolder {
-        val binding = ProductOrderItemBinding.inflate(LayoutInflater.from(context), parent, false)
+        val binding = ProductSheetItemBinding.inflate(LayoutInflater.from(context), parent, false)
         return CartViewHolder(binding)
     }
 
@@ -69,9 +69,8 @@ class CartAdapter(
                 // Remove product if quantity is 1
                 cartList.remove(item)
                 notifyItemRemoved(position)
-                onProductRemoved(item)
                 onQuantityChange(item, 0)
-                Log.d("CheckCart", "Cart size after removal: ${cartList.size}, Quantity before removal: ${quantity}")
+                onProductRemoved(item)
             }
         }
 
@@ -84,11 +83,12 @@ class CartAdapter(
         }
     }
 
-}
-
     // Hàm định dạng giá tiền
     private fun formatCurrency(amount: Int): String {
         val formatter = NumberFormat.getNumberInstance(Locale("vi", "VN"))
         return "đ ${formatter.format(amount)}"
     }
+}
+
+
 

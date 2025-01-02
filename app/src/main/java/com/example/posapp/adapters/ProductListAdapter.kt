@@ -22,7 +22,7 @@ class ProductListAdapter(
 
         fun bind(product: Products) {
             binding.listName.text = product.name
-            binding.listPrice.text = "${formatCurrency(product.price)}"
+            binding.listPrice.text = formatCurrency(product.price)
             val bitmap = BitmapFactory.decodeFile(product.imageResId)
             binding.listImage.setImageBitmap(bitmap)
 
