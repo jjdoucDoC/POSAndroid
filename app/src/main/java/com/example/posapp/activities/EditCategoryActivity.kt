@@ -80,7 +80,11 @@ class EditCategoryActivity : AppCompatActivity() {
         }
     }
 
-    private fun showDeleteCategoryDialog(title: String, message: String, onDelete: () -> Unit) {
+    private fun showDeleteCategoryDialog(
+        title: String,
+        message: String,
+        onDelete: () -> Unit
+    ) {
         val dialogView = LayoutInflater.from(this).inflate(R.layout.alert_dialog_delete, null)
 
         val dialogTitle = dialogView.findViewById<TextView>(R.id.dialog_title)

@@ -1,11 +1,13 @@
     package com.example.posapp
 
+    import android.annotation.SuppressLint
     import android.content.ContentValues
     import android.content.Context
     import android.database.sqlite.SQLiteDatabase
     import android.database.sqlite.SQLiteOpenHelper
     import android.icu.util.Calendar
     import android.icu.util.TimeZone
+    import android.util.Log
     import com.example.posapp.models.Categories
     import com.example.posapp.models.Products
     import com.example.posapp.models.Users
@@ -16,7 +18,7 @@
 
         companion object {
             private const val DATABASE_NAME = "BizPosApp.db"
-            private const val DATABASE_VERSION = 7  // change version number when changing table structure
+            private const val DATABASE_VERSION = 8  // change version number when changing table structure
 
             // Users Table
             private const val USERS_TABLE = "users"
@@ -93,7 +95,7 @@
                     $ORDER_ID INTEGER PRIMARY KEY AUTOINCREMENT,
                     $ORDER_TOTAL_PRICE INTEGER,
                     $ORDER_DATE DATETIME DEFAULT CURRENT_TIMESTAMP,
-                    $DELIVERY_DATE DATE,
+                    $DELIVERY_DATE TEXT,
                     $ORDER_USER INTEGER,
                     $ORDER_NOTES TEXT
                 )
@@ -144,7 +146,8 @@
         }
 
         // Check Valid Login
-        fun isValidUser(emailOrPhone: String, password: String): Boolean {
+        @SuppressLint("Range")
+        fun isValidUser(emailOrPhone: String, password: String): Int {
             val db = readableDatabase
             val query = """
                 SELECT * FROM $USERS_TABLE
@@ -153,10 +156,16 @@
             """.trimIndent()
             val cursor = db.rawQuery(query, arrayOf(emailOrPhone, emailOrPhone, password))
 
-            val isValid = cursor.count > 0
+            // If the user exists, return the userId, otherwise return -1
+            val userId = if (cursor.moveToFirst()) {
+                cursor.getInt(cursor.getColumnIndex(USER_COLUMN_ID))
+            } else {
+                -1
+            }
+
             cursor.close()
             db.close()
-            return isValid
+            return userId
         }
 
         // Check If User Exists (by Email or Phone)
@@ -356,9 +365,11 @@
 
         /*---------------Order Method--------------------------*/
         // Add Order
-        fun insertOrder(totalPrice: Int): Long {
+        fun insertOrder(totalPrice: Int,
+                        deliveryDate: String,
+                        userId: Int,
+                        notes: String?): Long {
             val db = writableDatabase
-
             // Get current time in Vietnam Time Zone (ICT)
             val calendar = Calendar.getInstance(TimeZone.getTimeZone("Asia/Ho_Chi_Minh"))
             val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
@@ -367,12 +378,15 @@
             val values = ContentValues().apply {
                 put(ORDER_TOTAL_PRICE, totalPrice)
                 put(ORDER_DATE, orderDate)
+                put(DELIVERY_DATE, deliveryDate)
+                put(ORDER_USER, userId)
+                put(ORDER_NOTES, notes ?: "") // if notes is null, insert empty string
             }
             return db.insert(ORDERS_TABLE, null, values)
         }
 
         // Add Order Detail
-        fun insertOrderDetails(orderId: Long,
+        fun insertOrderDetails(orderId: Int,
                                productId: Int,
                                productPrice: Int,
                                quantity: Int,

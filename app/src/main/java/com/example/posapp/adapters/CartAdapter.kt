@@ -17,7 +17,7 @@ class CartAdapter(
     private val context: Context,
     private val cartList: MutableMap<Products, Int>,     // Key(Product) - Value(Int)
     private val onQuantityChange: (Products, Int) -> Unit,   // Callback when the quantity number changes
-    private val onProductRemoved: (Products) -> Unit    // Call back when a product is removed from cart
+
 ) : RecyclerView.Adapter<CartAdapter.CartViewHolder>() {
 
     private val databases : Databases = Databases(context)
@@ -70,7 +70,6 @@ class CartAdapter(
                 cartList.remove(item)
                 notifyItemRemoved(position)
                 onQuantityChange(item, 0)
-                onProductRemoved(item)
             }
         }
 

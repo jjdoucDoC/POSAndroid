@@ -8,4 +8,4 @@ data class Products(
     val price: Int,
     val imageResId: String,
     val category: Int
-) : Serializable
+) : Serializable    // cho phép đối tượng Products được truyền qua Intent giữa các Activity

@@ -19,7 +19,7 @@ class WelcomeActivity : AppCompatActivity() {
 
         // Check login status
         val sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-        val isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", true)
+        val isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false)  // if isLoggedIn is not exists, return false
 
         if (isLoggedIn) {
             // If already is logged in, move to MainActivity and do not return to WelcomeActivity

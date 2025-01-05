@@ -11,8 +11,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.RelativeLayout
+import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -32,15 +36,15 @@ import java.util.Locale
 class CashierFragment : Fragment() {
 
     private var isGridView = true
-    private lateinit var productList: List<Products>
-    private lateinit var cartList: MutableMap<Products, Int>    // Key(Product) - Value(Int)
+    private lateinit var productList: List<Products>    // Item Product
+    private lateinit var cartList: MutableMap<Products, Int>    // Item Cart with Key(Product) - Value(Int)
     private lateinit var databases: Databases
 
-    private val REQUEST_CODE_PLACE_ORDER = 1
+    private val REQUEST_CODE_PLACE_ORDER = 1    // request code for clear cart
 
     // Declare binding
-    private var _binding: FragmentCashierBinding? = null    // biến _binding để lưu trữ binding và giải phóng nó khi view bị hủy
-    private val binding get() = _binding!!      // biến binding đảm bảo luôn sử dụng binding không null
+    private var _binding: FragmentCashierBinding? = null    // lưu trữ binding và giải phóng khi view bị hủy
+    private val binding get() = _binding!!      // đảm bảo luôn sử dụng binding không null (!!)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -109,12 +113,12 @@ class CashierFragment : Fragment() {
 
     // Add to cart handle event
     private fun addToCart (product: Products) {
+        // Check if product is exists in cart
         if (cartList.containsKey(product)) {
-            cartList[product] = cartList[product]!! + 1
+            cartList[product] = cartList[product]!! + 1 // If is exists, increase quantity of product by 1
         } else {
-            cartList[product] = 1
+            cartList[product] = 1 // If not exists, set default quantity to 1
         }
-
         updateCart()
     }
 
@@ -163,7 +167,6 @@ class CashierFragment : Fragment() {
         // Set up RecyclerView to show the list of cart items
         val cartRecyclerView = bottomSheetView.findViewById<RecyclerView>(R.id.cart_list)
         cartRecyclerView.layoutManager = LinearLayoutManager(requireContext())  // Set layout for list
-
         cartRecyclerView.adapter = CartAdapter(requireContext(), cartList, { product, quantity ->
             // Callback to update the quantity
             if (quantity == 0) {
@@ -180,19 +183,59 @@ class CashierFragment : Fragment() {
                 cartList[product] = quantity
                 updateCart(bottomSheetDialog)
             }
-        }, { product ->
-            // Remove product from cart when clicked
-            cartList.remove(product)
-            cartRecyclerView.adapter?.notifyDataSetChanged()
-            if (cartList.isEmpty()) {
-                bottomSheetDialog.dismiss()
-                binding.cartContainer.visibility = View.GONE
-            }
-            updateCart(bottomSheetDialog)
         })
+
+        // Clear Sheet Cart
+        val clearSheetCartButton = bottomSheetView.findViewById<ImageView>(R.id.clear_sheet_cart_btn)
+        clearSheetCartButton.setOnClickListener {
+            showClearSheetDialog(
+                "Warning",
+                "Are you sure you want to delete this cart?",
+                bottomSheetDialog,
+                cartRecyclerView
+            )
+        }
 
         updateCart(bottomSheetDialog)
         bottomSheetDialog.show()
+    }
+
+    // Show Alert Dialog to clear the cart
+    private fun showClearSheetDialog(
+        title: String,
+        message: String,
+        bottomSheetDialog: BottomSheetDialog,
+        cartRecyclerView: RecyclerView
+    ) {
+        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.alert_dialog_delete, null)
+
+        val dialogTitle = dialogView.findViewById<TextView>(R.id.dialog_title)
+        val dialogMessage = dialogView.findViewById<TextView>(R.id.dialog_message)
+        val yesButton = dialogView.findViewById<Button>(R.id.yes_button)
+        val noButton = dialogView.findViewById<Button>(R.id.no_button)
+
+        dialogTitle.text = title
+        dialogMessage.text = message
+
+        val customDialog = AlertDialog.Builder(requireContext())
+            .setView(dialogView)
+            .create()
+
+        // Handle the Yes button click
+        yesButton.setOnClickListener {
+            cartList.clear()
+            cartRecyclerView.adapter?.notifyDataSetChanged()
+            bottomSheetDialog.dismiss()
+            updateCart(bottomSheetDialog)
+            customDialog.dismiss()  // Close the dialog after action
+        }
+
+        // Handle the No button click
+        noButton.setOnClickListener {
+            customDialog.dismiss()  // Close the dialog if No is clicked
+        }
+
+        customDialog.show()  // Show the dialog
     }
 
     // Add to cart animation function
@@ -254,5 +297,4 @@ class CashierFragment : Fragment() {
             }
         }
     }
-
 }

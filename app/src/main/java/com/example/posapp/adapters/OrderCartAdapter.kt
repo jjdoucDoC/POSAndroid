@@ -1,5 +1,6 @@
 package com.example.posapp.adapters
 
+import android.annotation.SuppressLint
 import android.graphics.BitmapFactory
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -31,6 +32,7 @@ class OrderCartAdapter(
         return productList.size
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: OrderCartViewHolder, position: Int) {
         val item = productList[position]
         val quantity = cartList[item] ?: 0
@@ -40,7 +42,7 @@ class OrderCartAdapter(
         val bitmap = BitmapFactory.decodeFile(item.imageResId)
         holder.productImg.setImageBitmap(bitmap)
 
-        holder.quantity.text = "$quantity"
+        holder.quantity.text = "x$quantity"
 
         val itemSubtotal = item.price * quantity
         holder.subTotal.text = formatCurrency(itemSubtotal)
