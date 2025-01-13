@@ -116,7 +116,12 @@ class EditProductActivity : AppCompatActivity() {
             return
         }
 
-        val product = Products(productId, newName, new_price, new_imagePath, new_categoryId)
+        val product = Products(
+            id = productId,
+            name = newName,
+            price = new_price,
+            imageResId = new_imagePath,
+            category = new_categoryId)
         val isUpdated = databases.updateProduct(product)
         if (isUpdated) {
             Toast.makeText(this, "Product updated successfully!", Toast.LENGTH_SHORT).show()

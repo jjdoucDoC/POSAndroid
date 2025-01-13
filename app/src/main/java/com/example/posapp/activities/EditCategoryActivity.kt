@@ -70,7 +70,9 @@ class EditCategoryActivity : AppCompatActivity() {
             return
         }
 
-        val category = Categories(categoryId, newName)
+        val category = Categories(
+            id = categoryId,
+            name = newName)
         val isUpdated = databases.updateCategory(category)
         if (isUpdated) {
             Toast.makeText(this, "Category updated successfully!", Toast.LENGTH_SHORT).show()

@@ -9,6 +9,8 @@
     import android.icu.util.TimeZone
     import android.util.Log
     import com.example.posapp.models.Categories
+    import com.example.posapp.models.OrderDetail
+    import com.example.posapp.models.Orders
     import com.example.posapp.models.Products
     import com.example.posapp.models.Users
     import java.text.SimpleDateFormat
@@ -307,8 +309,8 @@
                 val image = cursor.getString(cursor.getColumnIndexOrThrow(PRODUCT_COLUMN_IMAGE))
                 val catId = cursor.getInt(cursor.getColumnIndexOrThrow(PRODUCT_COLUMN_CATEGORY))
 
-                val cat = Products(id, name, price, image, catId)
-                productList.add(cat)
+                val pro = Products(id, name, price, image, catId)
+                productList.add(pro)
             }
 
             cursor.close()
@@ -365,42 +367,53 @@
 
         /*---------------Order Method--------------------------*/
         // Add Order
-        fun insertOrder(totalPrice: Int,
-                        deliveryDate: String,
-                        userId: Int,
-                        notes: String?): Long {
+        fun insertOrder(order: Orders): Long {
             val db = writableDatabase
-            // Get current time in Vietnam Time Zone (ICT)
-            val calendar = Calendar.getInstance(TimeZone.getTimeZone("Asia/Ho_Chi_Minh"))
-            val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-            val orderDate = sdf.format(calendar.time)
-
             val values = ContentValues().apply {
-                put(ORDER_TOTAL_PRICE, totalPrice)
-                put(ORDER_DATE, orderDate)
-                put(DELIVERY_DATE, deliveryDate)
-                put(ORDER_USER, userId)
-                put(ORDER_NOTES, notes ?: "") // if notes is null, insert empty string
+                put(ORDER_TOTAL_PRICE, order.totalPrice)
+                put(ORDER_DATE, order.orderDate)
+                put(DELIVERY_DATE, order.deliveryDate)
+                put(ORDER_USER, order.userId)
+                put(ORDER_NOTES, order.notes ?: "") // if notes is null, insert empty string
             }
             return db.insert(ORDERS_TABLE, null, values)
         }
 
         // Add Order Detail
-        fun insertOrderDetails(orderId: Int,
-                               productId: Int,
-                               productPrice: Int,
-                               quantity: Int,
-                               subTotal: Int): Boolean {
+        fun insertOrderDetails(orderDetail: OrderDetail): Boolean {
             val db = writableDatabase
             val values = ContentValues().apply {
-                put(COLUMN_ORDER_ID_FK, orderId)
-                put(ORDER_DETAILS_PRODUCT, productId)
-                put(COLUMN_PRODUCT_PRICE, productPrice)
-                put(ORDER_DETAILS_QUANTITY, quantity)
-                put(ORDER_DETAILS_TOTAL_PRICE, subTotal)
+                put(COLUMN_ORDER_ID_FK, orderDetail.orderId)
+                put(ORDER_DETAILS_PRODUCT, orderDetail.productId)
+                put(COLUMN_PRODUCT_PRICE, orderDetail.productPrice)
+                put(ORDER_DETAILS_QUANTITY, orderDetail.quantity)
+                put(ORDER_DETAILS_TOTAL_PRICE, orderDetail.subTotal)
             }
             val result = db.insert(ORDER_DETAILS_TABLE, null, values)
             return result != -1L
         }
 
+        // Get All Order
+        fun getOrder() : List<Orders> {
+            val orderList = mutableListOf<Orders>()
+            val db = readableDatabase
+            val query = "SELECT * FROM $ORDERS_TABLE GROUP BY $ORDER_ID"
+            val cursor = db.rawQuery(query, null)
+
+            while (cursor.moveToNext()) {
+                val price = cursor.getInt(cursor.getColumnIndexOrThrow(ORDER_TOTAL_PRICE))
+                val deliveryDate = cursor.getString(cursor.getColumnIndexOrThrow(DELIVERY_DATE))
+                val user = cursor.getInt(cursor.getColumnIndexOrThrow(ORDER_USER))
+                val notes = cursor.getString(cursor.getColumnIndexOrThrow(ORDER_NOTES))
+                val orderDate = cursor.getString(cursor.getColumnIndexOrThrow(ORDER_DATE))
+
+                val ord = Orders(price,deliveryDate, user, notes, orderDate)
+                orderList.add(ord)
+            }
+
+            cursor.close()
+            db.close()
+
+            return orderList
+        }
     }

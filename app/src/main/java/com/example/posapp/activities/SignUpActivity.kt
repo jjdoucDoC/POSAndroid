@@ -65,7 +65,10 @@ class SignUpActivity : AppCompatActivity() {
             }
 
             // Add new user
-            val newUser = Users(email = email, phone = phone, passWord = password)
+            val newUser = Users(
+                email = email,
+                phone = phone,
+                passWord = password)
             databases.insertUser(newUser)
 
             Toast.makeText(this, "Registration successful!", Toast.LENGTH_SHORT).show()

@@ -86,7 +86,12 @@ class AddProductActivity : AppCompatActivity() {
             return
         }
 
-        val product = Products(0, productName, price, imagePath, categoryId)
+        val product = Products(
+            id = 0,
+            name = productName,
+            price = price,
+            imageResId = imagePath,
+            category = categoryId)
         val isInserted = databases.insertProduct(product)
         if (isInserted) {
             Toast.makeText(this, "Product added successfully!", Toast.LENGTH_SHORT).show()
@@ -117,7 +122,7 @@ class AddProductActivity : AppCompatActivity() {
         }
     }
 
-    //*** Lưu hình ảnh vào bộ nhớ thiết bị và trả về đường dẫn
+    // Lưu hình ảnh vào bộ nhớ thiết bị và trả về đường dẫn
     private fun saveImageToInternalStorage(imageUri: Uri): String? {
         return try {
             val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, imageUri)

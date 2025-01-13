@@ -39,7 +39,9 @@ class AddCategoryActivity : AppCompatActivity() {
             return
         }
 
-        val category = Categories(0, categoryName)
+        val category = Categories(
+            id = 0,
+            name = categoryName)
         val isInserted = databases.insertCategory(category)
         if (isInserted) {
             Toast.makeText(this, "Category added successfully!", Toast.LENGTH_SHORT).show()

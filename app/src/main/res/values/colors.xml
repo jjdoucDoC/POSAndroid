@@ -5,7 +5,9 @@
     <color name="grey">#F7F8FA</color>
     <color name="red">#F4261A</color>
     <color name="main_color">#1A72DD</color>
+    <color name="inactive_color">#331A72DD</color>
     <color name="text_color">#2A3256</color>
     <color name="selected_menu_item_color">#00419B</color>
     <color name="stroke_grey">#D1D1D1</color>
+    <color name="grey_opacity5">#F2F2F2</color>
 </resources>

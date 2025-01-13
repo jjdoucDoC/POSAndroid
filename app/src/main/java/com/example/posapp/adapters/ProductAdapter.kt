@@ -43,7 +43,7 @@ class ProductAdapter(
     override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
         val item = productList[position]
         holder.nameView.text = item.name
-        holder.priceView.text = "${formatCurrency(item.price)}"
+        holder.priceView.text = formatCurrency(item.price)
 
         // Fetch category name by category ID
         val category = databases.getCategoryByID(item.category) // Get category by ID

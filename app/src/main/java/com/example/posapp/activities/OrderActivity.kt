@@ -5,6 +5,7 @@ import android.app.Activity
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.icu.util.Calendar
 import android.os.Bundle
@@ -16,6 +17,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.posapp.Databases
 import com.example.posapp.adapters.OrderCartAdapter
 import com.example.posapp.databinding.ActivityOrderBinding
+import com.example.posapp.models.OrderDetail
+import com.example.posapp.models.Orders
 import com.example.posapp.models.Products
 import java.text.NumberFormat
 import java.util.Locale
@@ -49,6 +52,12 @@ class OrderActivity : AppCompatActivity() {
             finish()
         }
 
+        // Edit Customer Information
+        binding.customer.setOnClickListener {
+            val intent = Intent(this, CustomerActivity::class.java)
+            startActivity(intent)
+        }
+
         // Choose Delivery Date Button
         binding.chooseDeliveryDate.setOnClickListener {
             val calendar = Calendar.getInstance()
@@ -57,19 +66,12 @@ class OrderActivity : AppCompatActivity() {
             DatePickerDialog(this, {_, year, month, dayOfMonth ->
                 val timeCalendar = Calendar.getInstance()
                 timeCalendar.set(year, month, dayOfMonth)
-
-                // Show TimePickerDialog
-                TimePickerDialog(this, {_, hourOfDay, minute ->
-                    timeCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay)
-                    timeCalendar.set(Calendar.MINUTE, minute)
-
                     // Refresh TextView
-                    val selectedDateTime = String.format(
-                        "%04d-%02d-%02d %02d:%02d",
-                        year, month + 1, dayOfMonth, hourOfDay, minute
+                    val selectedDate = String.format(
+                        "%04d-%02d-%02d",
+                        year, month + 1, dayOfMonth
                     )
-                    binding.chooseDeliveryDate.text = selectedDateTime
-                }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true).show()
+                    binding.chooseDeliveryDate.text = selectedDate
             }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show()
         }
 
@@ -101,8 +103,8 @@ class OrderActivity : AppCompatActivity() {
 
     // Place Order Function
     private fun placeOrder(cartList: HashMap<Products, Int>, totalPrice: Int) {
-        val deliveryDay = binding.chooseDeliveryDate.text.toString().trim()
-        if (deliveryDay.isEmpty()) {
+        val deliveryDate = binding.chooseDeliveryDate.text.toString().trim()
+        if (deliveryDate.isEmpty()) {
             Toast.makeText(this, "Please select a delivery date.", Toast.LENGTH_SHORT).show()
             return
         }
@@ -117,13 +119,26 @@ class OrderActivity : AppCompatActivity() {
 
         val notes = binding.addOrderNoteInput.text.toString().trim()
 
-        val orderId = databases.insertOrder(totalPrice, deliveryDay, userId, notes)
+        val order = Orders(
+            totalPrice = totalPrice,
+            deliveryDate = deliveryDate,
+            userId = userId,
+            notes = notes
+        )
+        val orderId = databases.insertOrder(order)
         if (orderId > 0) {
             var allDetailsInsert = true
             for ((product, quantity) in cartList) {
                 var subTotal = 0
                 subTotal = product.price * quantity
-                val detailInsert = databases.insertOrderDetails(orderId.toInt(), product.id, product.price, quantity, subTotal)
+                val orderDetail = OrderDetail(
+                    orderId = orderId.toInt(),
+                    productId = product.id,
+                    productPrice = product.price,
+                    quantity = quantity,
+                    subTotal = subTotal
+                )
+                val detailInsert = databases.insertOrderDetails(orderDetail)
                 if (!detailInsert) {
                     allDetailsInsert = false
                     break
