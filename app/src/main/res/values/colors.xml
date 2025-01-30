@@ -10,4 +10,5 @@
     <color name="selected_menu_item_color">#00419B</color>
     <color name="stroke_grey">#D1D1D1</color>
     <color name="grey_opacity5">#F2F2F2</color>
+    <color name="green">#39ad3f</color>
 </resources>

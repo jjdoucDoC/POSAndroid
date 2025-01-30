@@ -6,10 +6,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context=".activities.OrderActivity">
+    tools:context=".activities.EditOrderActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/order_header"
+        android:id="@+id/orderEdit_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
@@ -17,7 +17,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/order_backCashier_btn"
+            android:id="@+id/orderEdit_back_btn"
             android:layout_width="34dp"
             android:layout_height="34dp"
             android:layout_marginStart="24dp"
@@ -31,44 +31,44 @@
             app:tint="@color/main_color" />
 
         <TextView
-            android:id="@+id/textView33"
+            android:id="@+id/textView47"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:layout_marginBottom="4dp"
             android:fontFamily="@font/rubik_medium"
-            android:text="Order Details"
+            android:text="Edit Order"
             android:textColor="@color/main_color"
             android:textSize="22sp"
-            app:layout_constraintBottom_toBottomOf="@+id/order_backCashier_btn"
+            app:layout_constraintBottom_toBottomOf="@+id/orderEdit_back_btn"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/order_backCashier_btn" />
+            app:layout_constraintTop_toTopOf="@+id/orderEdit_back_btn"
+            app:layout_constraintVertical_bias="0.0" />
 
         <View
-            android:id="@+id/view11"
+            android:id="@+id/view19"
             android:layout_width="0dp"
             android:layout_height="0.5dp"
             android:layout_marginTop="16dp"
             android:background="@color/stroke_grey"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/order_backCashier_btn" />
+            app:layout_constraintTop_toBottomOf="@+id/orderEdit_back_btn" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/customer_layout"
+            android:id="@+id/customer_editOrder_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:layout_marginTop="24dp"
             android:layout_marginEnd="24dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView33">
+            app:layout_constraintTop_toBottomOf="@+id/textView47">
 
             <TextView
-                android:id="@+id/customer"
+                android:id="@+id/customer_detail"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:drawableEnd="@drawable/baseline_arrow_forward_ios_24"
@@ -82,17 +82,16 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/customerInfo_layout"
+                android:id="@+id/customer_info_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"
-                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/customer">
+                app:layout_constraintTop_toBottomOf="@+id/customer_detail">
 
                 <TextView
-                    android:id="@+id/customerName"
+                    android:id="@+id/customerName_editOrder"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/rubik_regular"
@@ -103,7 +102,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/customerPhone"
+                    android:id="@+id/customerPhone_editOrder"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="3dp"
@@ -112,10 +111,10 @@
                     android:textColor="@color/text_color"
                     android:textSize="11sp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/customerName" />
+                    app:layout_constraintTop_toBottomOf="@+id/customerName_editOrder" />
 
                 <TextView
-                    android:id="@+id/customerAddress"
+                    android:id="@+id/customerAddress_editOrder"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="3dp"
@@ -124,11 +123,12 @@
                     android:textColor="@color/text_color"
                     android:textSize="11sp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/customerPhone" />
+                    app:layout_constraintTop_toBottomOf="@+id/customerPhone_editOrder" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <View
-                android:id="@+id/view15"
+                android:id="@+id/view21"
                 android:layout_width="0dp"
                 android:layout_height="0.5dp"
                 android:layout_marginTop="12dp"
@@ -136,12 +136,13 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/customerInfo_layout"
+                app:layout_constraintTop_toBottomOf="@+id/customer_info_layout"
                 app:layout_constraintVertical_bias="0.0" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/delivery_layout"
+            android:id="@+id/delivery_editOrder_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
@@ -150,13 +151,12 @@
             android:layout_marginBottom="5dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/customer_layout"
+            app:layout_constraintTop_toBottomOf="@+id/customer_editOrder_layout"
             app:layout_constraintVertical_bias="0.0">
 
             <TextView
-                android:id="@+id/textView38"
+                android:id="@+id/textView53"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/rubik_regular"
@@ -167,7 +167,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/choose_delivery_date"
+                android:id="@+id/edit_delivery_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:drawableEnd="@drawable/baseline_edit_calendar_24"
@@ -177,13 +177,12 @@
                 android:textAlignment="center"
                 android:textColor="@color/main_color"
                 android:textSize="14sp"
-                app:layout_constraintBottom_toBottomOf="@+id/textView38"
+                app:layout_constraintBottom_toBottomOf="@+id/textView53"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/textView38"
-                app:layout_constraintVertical_bias="0.0" />
+                app:layout_constraintTop_toTopOf="@+id/textView53" />
 
             <View
-                android:id="@+id/view16"
+                android:id="@+id/view22"
                 android:layout_width="0dp"
                 android:layout_height="0.5dp"
                 android:layout_marginTop="12dp"
@@ -191,37 +190,39 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView38"
+                app:layout_constraintTop_toBottomOf="@+id/textView53"
                 app:layout_constraintVertical_bias="0.0" />
-
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/order_body"
+        android:id="@+id/orderEdit_body"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="@color/grey"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/order_header">
+        app:layout_constraintTop_toBottomOf="@+id/orderEdit_header"
+        app:layout_constraintVertical_bias="1.0">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/order_cart_list"
+            android:id="@+id/order_detail_list"
             android:layout_width="0dp"
-            android:layout_height="300dp"
+            android:layout_height="250dp"
             android:layout_marginStart="24dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="24dp"
-            android:scrollbars="vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent">
+
+        </androidx.recyclerview.widget.RecyclerView>
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintLayout12"
+            android:id="@+id/constraintLayout16"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
@@ -229,10 +230,10 @@
             android:layout_marginEnd="24dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/order_cart_list">
+            app:layout_constraintTop_toBottomOf="@+id/order_detail_list">
 
             <TextView
-                android:id="@+id/textView41"
+                android:id="@+id/textView48"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/rubik_medium"
@@ -243,20 +244,20 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/totalPrice"
+                android:id="@+id/new_totalPrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/rubik_medium"
                 android:text="d 32.000"
                 android:textColor="@color/text_color"
                 android:textSize="16sp"
-                app:layout_constraintBottom_toBottomOf="@+id/textView41"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/textView41"
+                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.0" />
 
             <View
-                android:id="@+id/view12"
+                android:id="@+id/view23"
                 android:layout_width="0dp"
                 android:layout_height="0.5dp"
                 android:layout_marginTop="12dp"
@@ -264,22 +265,22 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView41"
+                app:layout_constraintTop_toBottomOf="@+id/textView48"
                 app:layout_constraintVertical_bias="0.0" />
-
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="0dp"
+            android:id="@+id/constraintLayout18"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:layout_marginEnd="24dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/constraintLayout12">
+            app:layout_constraintTop_toBottomOf="@+id/constraintLayout16">
 
             <TextView
-                android:id="@+id/textView36"
+                android:id="@+id/textView55"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/rubik_regular"
@@ -290,7 +291,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <EditText
-                android:id="@+id/add_orderNote_input"
+                android:id="@+id/edit_orderNote_input"
                 android:layout_width="0dp"
                 android:layout_height="57dp"
                 android:layout_marginTop="8dp"
@@ -306,23 +307,56 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView36"
+                app:layout_constraintTop_toBottomOf="@+id/textView55"
                 app:layout_constraintVertical_bias="0.0" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/place_order_btn"
+            android:id="@+id/add_newProductOrder"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="24dp"
+            android:background="@drawable/button_non_fill_bg"
+            android:text="+ Add New Product"
+            android:textAllCaps="false"
+            android:textColor="@color/main_color"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/constraintLayout18" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/update_order_btn"
             android:layout_width="0dp"
             android:layout_height="57dp"
             android:layout_marginStart="24dp"
             android:layout_marginEnd="24dp"
-            android:layout_marginBottom="12dp"
+            android:layout_marginBottom="14dp"
             android:background="@drawable/button_fill_bg"
             android:fontFamily="@font/rubik_medium"
-            android:text="Place Order"
+            android:text="Save Order"
             android:textAllCaps="false"
             android:textColor="@color/white"
             android:textSize="16sp"
+            app:layout_constraintBottom_toTopOf="@+id/delete_order_btn"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/delete_order_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:text="Delete Order"
+            android:fontFamily="@font/rubik_regular"
+            android:textSize="12sp"
+            android:textColor="@color/red"
+            android:drawableStart="@drawable/baseline_delete_24"
+            android:drawableTint="@color/red"
+            android:drawablePadding="8dp"
+            android:gravity="center_vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

@@ -10,6 +10,7 @@ import android.content.SharedPreferences
 import android.icu.util.Calendar
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -28,6 +29,8 @@ class OrderActivity : AppCompatActivity() {
     private lateinit var binding: ActivityOrderBinding
     private lateinit var databases: Databases
     private lateinit var orderCartAdapter: OrderCartAdapter
+
+    private val REQUEST_CUSTOMER = 1001
 
     @SuppressLint("DefaultLocale")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,7 +58,19 @@ class OrderActivity : AppCompatActivity() {
         // Edit Customer Information
         binding.customer.setOnClickListener {
             val intent = Intent(this, CustomerActivity::class.java)
-            startActivity(intent)
+
+            // Pass existing customer data to CustomerActivity
+            val name = binding.customerName.text.toString().trim()
+            val phone = binding.customerPhone.text.toString().trim()
+            val address = binding.customerAddress.text.toString().trim()
+
+            if (name.isNotEmpty() && phone.isNotEmpty() && address.isNotEmpty()) {
+                intent.putExtra("customerName", name)
+                intent.putExtra("customerPhone", phone)
+                intent.putExtra("customerAddress", address)
+            }
+
+            startActivityForResult(intent, REQUEST_CUSTOMER)
         }
 
         // Choose Delivery Date Button
@@ -76,7 +91,7 @@ class OrderActivity : AppCompatActivity() {
         }
 
         val totalPrice = totalPriceOrder(cartList)
-        binding.totalOrder.text = formatCurrency(totalPrice)
+        binding.totalPrice.text = formatCurrency(totalPrice)
 
         binding.placeOrderBtn.setOnClickListener {
             placeOrder(cartList, totalPrice)
@@ -103,10 +118,24 @@ class OrderActivity : AppCompatActivity() {
 
     // Place Order Function
     private fun placeOrder(cartList: HashMap<Products, Int>, totalPrice: Int) {
-        val deliveryDate = binding.chooseDeliveryDate.text.toString().trim()
-        if (deliveryDate.isEmpty()) {
+        val deliveryDateStr = binding.chooseDeliveryDate.text.toString().trim()
+        if (deliveryDateStr.isEmpty()) {
             Toast.makeText(this, "Please select a delivery date.", Toast.LENGTH_SHORT).show()
             return
+        }
+
+        // Parse the delivery date
+        val sdf = java.text.SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val deliveryDate = sdf.parse(deliveryDateStr)
+
+        // Get the current date
+        val currentDate = java.util.Calendar.getInstance().time
+
+        // Xác định trạng thái đơn hàng
+        val orderStatus = if (currentDate.after(deliveryDate)) {
+            "Delivered"
+        } else {
+            "Shipping"
         }
 
         // Get user ID
@@ -117,13 +146,27 @@ class OrderActivity : AppCompatActivity() {
             return
         }
 
+        // Get customer info
+        val name = binding.customerName.text.toString().trim()
+        val phone = binding.customerPhone.text.toString().trim()
+        val address = binding.customerAddress.text.toString().trim()
+        if (name.isEmpty() && phone.isEmpty() && address.isEmpty()) {
+            Toast.makeText(this, "Please provide customer information!", Toast.LENGTH_SHORT).show()
+            return
+        }
+
         val notes = binding.addOrderNoteInput.text.toString().trim()
 
         val order = Orders(
+            id = 0,
             totalPrice = totalPrice,
-            deliveryDate = deliveryDate,
+            deliveryDate = deliveryDateStr,
             userId = userId,
-            notes = notes
+            notes = notes,
+            customerName = name,
+            customerPhone = phone,
+            customerAddress = address,
+            status = orderStatus
         )
         val orderId = databases.insertOrder(order)
         if (orderId > 0) {
@@ -132,6 +175,7 @@ class OrderActivity : AppCompatActivity() {
                 var subTotal = 0
                 subTotal = product.price * quantity
                 val orderDetail = OrderDetail(
+                    id = 0,
                     orderId = orderId.toInt(),
                     productId = product.id,
                     productPrice = product.price,
@@ -166,4 +210,21 @@ class OrderActivity : AppCompatActivity() {
         val formatter = NumberFormat.getNumberInstance(Locale("vi", "VN"))
         return "đ ${formatter.format(amount)}"
     }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_CUSTOMER && resultCode == Activity.RESULT_OK) {
+            val customerName = data?.getStringExtra("customerName")
+            val customerPhone = data?.getStringExtra("customerPhone")
+            val customerAddress = data?.getStringExtra("customerAddress")
+
+            if (customerName != null && customerPhone != null && customerAddress != null) {
+                binding.customerName.text = "$customerName"
+                binding.customerPhone.text = "$customerPhone"
+                binding.customerAddress.text = "$customerAddress"
+                binding.customerInfoLayout.visibility = View.VISIBLE
+            }
+        }
+    }
+
 }

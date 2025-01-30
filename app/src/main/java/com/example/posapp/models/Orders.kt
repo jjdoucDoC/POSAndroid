@@ -6,11 +6,16 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 data class Orders(
+    val id: Int,
     val totalPrice: Int,
     val deliveryDate: String,
     val userId: Int,
     val notes: String?= null,
-    val orderDate: String = getCurrentVietnamTime()
+    val customerName: String,
+    val customerPhone: String,
+    val customerAddress: String,
+    val status: String,
+    val orderDate: String = getCurrentVietnamTime(),
 ) {
     companion object {
         fun getCurrentVietnamTime(): String {

@@ -1,14 +1,12 @@
-package com.example.posapp.adapters
+package com.example.posapp.fragments
 
 import android.app.DatePickerDialog
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
-import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.TextView
 import android.widget.Toast
@@ -48,18 +46,30 @@ class FilterDialogFragment(
             onFilterApplied(null, null)
             dismiss()
         }
-        datePickerLayout.visibility = View.GONE
-        radioGroup.setOnCheckedChangeListener { _, checkedId ->
-            if (checkedId == R.id.fill_chooseDay_radio) {
-                datePickerLayout.visibility = View.VISIBLE
-            } else {
-                datePickerLayout.visibility = View.GONE
-            }
-        }
 
         // Date picker dialogs
         val dateFormatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         val calendar = Calendar.getInstance()
+
+        // Tính toán ngày bắt đầu và ngày kết thúc cho 7 ngày gần đây
+        val today = calendar.time
+        endDate = dateFormatter.format(today) // Ngày hiện tại
+        calendar.add(Calendar.DAY_OF_YEAR, -6) // Lùi lại 6 ngày để có 7 ngày
+        startDate = dateFormatter.format(calendar.time)
+
+        datePickerLayout.visibility = View.GONE
+        radioGroup.setOnCheckedChangeListener { _, checkedId ->
+            if (checkedId == R.id.fill_chooseDay_radio) {
+                datePickerLayout.visibility = View.VISIBLE
+            } else if (checkedId == R.id.fill_last7days_radio) {
+                datePickerLayout.visibility = View.GONE
+                // Gán giá trị cho startDate và endDate
+                endDate = dateFormatter.format(today)
+                calendar.time = today
+                calendar.add(Calendar.DAY_OF_YEAR, -6)
+                startDate = dateFormatter.format(calendar.time)
+            }
+        }
 
         dateStartButton.setOnClickListener {
             DatePickerDialog(

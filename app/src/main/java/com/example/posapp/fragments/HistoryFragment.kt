@@ -8,12 +8,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.posapp.Databases
-import com.example.posapp.adapters.FilterDialogFragment
 import com.example.posapp.adapters.OrderAdapter
 import com.example.posapp.databinding.FragmentHistoryBinding
 import com.example.posapp.models.Orders
 import java.text.SimpleDateFormat
-import java.util.TimeZone
 
 class HistoryFragment : Fragment() {
 

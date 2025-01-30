@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout17"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardView11"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="15dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0">
+
+            <ImageView
+                android:id="@+id/product_image_editOrder"
+                android:layout_width="68dp"
+                android:layout_height="68dp"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/image_ic" />
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/product_name_editOrder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="14dp"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/rubik_medium"
+            android:text="Product Name"
+            android:textColor="@color/text_color"
+            android:textSize="16sp"
+            app:layout_constraintStart_toEndOf="@+id/cardView11"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardView13"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            app:cardCornerRadius="10dp"
+            app:layout_constraintBottom_toBottomOf="@+id/cardView12"
+            app:layout_constraintStart_toEndOf="@+id/quantity_editOrder"
+            app:layout_constraintTop_toTopOf="@+id/cardView12"
+            app:layout_constraintVertical_bias="0.0">
+
+            <ImageView
+                android:id="@+id/edit_increase_quantity_btn"
+                android:layout_width="36dp"
+                android:layout_height="32dp"
+                android:background="@color/main_color"
+                app:srcCompat="@drawable/baseline_add_24" />
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/quantity_editOrder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:fontFamily="@font/rubik_regular"
+            android:text="quantity"
+            android:textColor="@color/text_color"
+            android:textSize="13sp"
+            app:layout_constraintBottom_toBottomOf="@+id/cardView12"
+            app:layout_constraintStart_toEndOf="@+id/cardView12"
+            app:layout_constraintTop_toTopOf="@+id/cardView12" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardView12"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="14dp"
+            android:layout_marginTop="5dp"
+            app:cardCornerRadius="10dp"
+            app:layout_constraintStart_toEndOf="@+id/cardView11"
+            app:layout_constraintTop_toBottomOf="@+id/product_name_editOrder">
+
+            <ImageView
+                android:id="@+id/edit_decrease_quantity_btn"
+                android:layout_width="36dp"
+                android:layout_height="32dp"
+                android:background="@color/grey"
+                android:scaleType="centerCrop"
+                app:srcCompat="@drawable/minus_ic" />
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/product_subtotal_editOrder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/rubik_regular"
+            android:text="Price"
+            android:textColor="@color/text_color"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@+id/quantity_editOrder"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/product_name_editOrder" />
+
+        <ImageView
+            android:id="@+id/remove_product_orderDetail_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:scaleType="fitCenter"
+            app:layout_constraintBottom_toTopOf="@+id/product_name_editOrder"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/baseline_delete_24"
+            app:tint="@color/text_color"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <View
+        android:id="@+id/view20"
+        android:layout_width="0dp"
+        android:layout_height="0.5dp"
+        android:layout_marginTop="12dp"
+        android:background="@color/stroke_grey"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout17"
+        app:layout_constraintVertical_bias="0.0" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

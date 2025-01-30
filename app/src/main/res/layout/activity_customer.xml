@@ -26,13 +26,13 @@
             android:text="Customer"
             android:textColor="@color/main_color"
             android:textSize="22sp"
-            app:layout_constraintBottom_toBottomOf="@+id/imageView6"
+            app:layout_constraintBottom_toBottomOf="@+id/closeCustomer_button"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/imageView6" />
+            app:layout_constraintTop_toTopOf="@+id/closeCustomer_button" />
 
         <ImageView
-            android:id="@+id/imageView6"
+            android:id="@+id/closeCustomer_button"
             android:layout_width="34dp"
             android:layout_height="34dp"
             android:layout_marginStart="24dp"
@@ -53,7 +53,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView6"
+            app:layout_constraintTop_toBottomOf="@+id/closeCustomer_button"
             app:layout_constraintVertical_bias="0.0" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -90,7 +90,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <EditText
-                android:id="@+id/editTextText"
+                android:id="@+id/customerName_input"
                 android:layout_width="0dp"
                 android:layout_height="57dp"
                 android:layout_marginTop="10dp"
@@ -133,7 +133,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <EditText
-                android:id="@+id/editTextText2"
+                android:id="@+id/customerPhone_input"
                 android:layout_width="0dp"
                 android:layout_height="57dp"
                 android:layout_marginTop="10dp"
@@ -176,7 +176,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <EditText
-                android:id="@+id/editTextText3"
+                android:id="@+id/customerAddress_input"
                 android:layout_width="0dp"
                 android:layout_height="57dp"
                 android:layout_marginTop="10dp"
@@ -208,7 +208,7 @@
             android:textAllCaps="false"
             android:fontFamily="@font/rubik_medium"
             android:textSize="16sp"
-            android:background="@drawable/button_inactive_bg"
+            android:background="@drawable/button_fill_bg"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

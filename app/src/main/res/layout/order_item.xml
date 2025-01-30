@@ -76,13 +76,13 @@
                 app:layout_constraintTop_toTopOf="@+id/textView43" />
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/status_cardView"
                 android:layout_width="101dp"
                 android:layout_height="29dp"
                 android:layout_marginTop="22dp"
                 android:layout_marginEnd="20dp"
                 android:layout_marginBottom="22dp"
                 app:cardCornerRadius="5dp"
-                android:backgroundTint="@color/main_color"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -97,10 +97,10 @@
                         android:id="@+id/order_status"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Status"
                         android:fontFamily="@font/rubik_regular"
-                        android:textSize="12sp"
+                        android:text="Status"
                         android:textColor="@color/white"
+                        android:textSize="12sp"
                         android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
