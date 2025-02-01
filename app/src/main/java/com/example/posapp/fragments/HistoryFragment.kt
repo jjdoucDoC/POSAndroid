@@ -17,6 +17,7 @@ class HistoryFragment : Fragment() {
 
     private lateinit var databases: Databases
     private lateinit var orderList: List<Orders>
+    private lateinit var orderAdapter: OrderAdapter
 
     private var _binding: FragmentHistoryBinding? = null
     private val binding get() = _binding!!
@@ -63,7 +64,7 @@ class HistoryFragment : Fragment() {
     }
 
     private fun setupRecyclerView(filteredOrders: List<Orders> = orderList) {
-        val orderAdapter = OrderAdapter(requireContext(), filteredOrders)
+        orderAdapter = OrderAdapter(requireContext(), filteredOrders)
         binding.orderRecyclerview.layoutManager = LinearLayoutManager(requireContext())
         binding.orderRecyclerview.adapter = orderAdapter
     }
@@ -71,6 +72,11 @@ class HistoryFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onResume() {
+        super.onResume()
+        orderAdapter.refreshData(databases.getOrder())
     }
 
 }

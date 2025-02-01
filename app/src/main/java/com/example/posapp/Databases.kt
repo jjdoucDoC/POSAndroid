@@ -521,20 +521,47 @@ class Databases(context: Context) :
     }
 
     // Update Order
-    fun updateOrderDetail(orderDetail: OrderDetail): Boolean {
+    fun updateOrder(orders: Orders): Boolean {
         val db = writableDatabase
         val values = ContentValues().apply {
-            put(PRODUCT_COLUMN_ID, orderDetail.productId)
-            put(PRODUCT_COLUMN_PRICE, orderDetail.productPrice)
-            put(ORDER_DETAILS_QUANTITY, orderDetail.quantity)
-            put(ORDER_DETAILS_TOTAL_PRICE, orderDetail.subTotal)
+            put(ORDER_TOTAL_PRICE, orders.totalPrice)
+            put(DELIVERY_DATE, orders.deliveryDate)
+            put(ORDER_USER, orders.userId)
+            put(ORDER_NOTES, orders.notes ?: "")
+            put(ORDER_CUSTOMER_NAME, orders.customerName)
+            put(ORDER_CUSTOMER_PHONE, orders.customerPhone)
+            put(ORDER_CUSTOMER_ADDRESS, orders.customerAddress)
+            put(ORDER_STATUS, orders.status)
         }
 
-        val whereClause = "$ORDER_DETAILS_ID = ?"
-        val whereArgs = arrayOf(orderDetail.id.toString())
-        val result = db.update(ORDER_DETAILS_TABLE, values, whereClause, whereArgs)
+        val whereClause = "$ORDER_ID = ?"
+        val whereArgs = arrayOf(orders.id.toString())
+        val result = db.update(ORDERS_TABLE, values, whereClause, whereArgs)
         db.close()
 
         return result > 0
     }
+
+    // Delete Order
+    fun deleteOrder(orderID: Int): Boolean {
+        val db = writableDatabase
+        val whereClause = "$ORDER_ID = ?"
+        val whereArgs = arrayOf(orderID.toString())
+        val result = db.delete(ORDERS_TABLE, whereClause, whereArgs)
+        db.close()
+
+        return result > 0
+    }
+
+    // Delete Order Detail
+    fun deleteOrderDetailsByOrderID(orderID: Int): Boolean {
+        val db = writableDatabase
+        val whereClause = "$COLUMN_ORDER_ID_FK = ?"
+        val whereArgs = arrayOf(orderID.toString())
+        val result = db.delete(ORDER_DETAILS_TABLE, whereClause, whereArgs)
+        db.close()
+
+        return result > 0
+    }
+
 }

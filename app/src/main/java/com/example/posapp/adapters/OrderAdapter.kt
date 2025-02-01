@@ -13,6 +13,7 @@ import com.example.posapp.Databases
 import com.example.posapp.R
 import com.example.posapp.activities.EditOrderActivity
 import com.example.posapp.databinding.OrderItemBinding
+import com.example.posapp.models.Categories
 import com.example.posapp.models.Orders
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
@@ -89,5 +90,12 @@ class OrderAdapter(
     private fun formatCurrency(amount: Int): String {
         val formatter = NumberFormat.getNumberInstance(Locale("vi", "VN"))
         return "đ ${formatter.format(amount)}"
+    }
+
+
+    // Làm mới danh sách loại sản phẩm
+    fun refreshData(newOrders: List<Orders>) {
+        orderList = newOrders
+        notifyDataSetChanged()
     }
 }
