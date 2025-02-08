@@ -8,4 +8,10 @@
     <style name="Theme.PoSApp" parent="Base.Theme.PoSApp" />
 
     <style name="Theme.MainActivity" parent="Theme.Material3.DayNight.NoActionBar" />
+    <style name="Theme.PoSApp.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+    <style name="Theme.PoSApp.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="Theme.PoSApp.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

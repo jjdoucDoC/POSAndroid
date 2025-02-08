@@ -39,6 +39,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.mpandroidchart.vv310)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

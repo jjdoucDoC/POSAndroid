@@ -21,8 +21,7 @@ class Databases(context: Context) :
 
     companion object {
         private const val DATABASE_NAME = "BizPosApp.db"
-        private const val DATABASE_VERSION =
-            10  // change version number when changing table structure
+        private const val DATABASE_VERSION = 10  // change version number when changing table structure
 
         // Users Table
         private const val USERS_TABLE = "users"
@@ -422,8 +421,7 @@ class Databases(context: Context) :
             val orderDate = cursor.getString(cursor.getColumnIndexOrThrow(ORDER_DATE))
             val customerName = cursor.getInt(cursor.getColumnIndexOrThrow(ORDER_CUSTOMER_NAME))
             val customerPhone = cursor.getInt(cursor.getColumnIndexOrThrow(ORDER_CUSTOMER_PHONE))
-            val customerAddress =
-                cursor.getInt(cursor.getColumnIndexOrThrow(ORDER_CUSTOMER_ADDRESS))
+            val customerAddress = cursor.getInt(cursor.getColumnIndexOrThrow(ORDER_CUSTOMER_ADDRESS))
             val status = cursor.getString(cursor.getColumnIndexOrThrow(ORDER_STATUS))
 
             val ord = Orders(
@@ -504,6 +502,96 @@ class Databases(context: Context) :
         db.close()
 
         return orderDetailList
+    }
+
+    // Get Order Status Count
+    fun getOrderStatusCount(timeRange: String): Map<String, Int> {
+        val db = readableDatabase
+        val query = when (timeRange) {
+            "7_days" -> "SELECT $ORDER_STATUS, COUNT(*) FROM $ORDERS_TABLE WHERE $ORDER_DATE >= date('now', '-7 days') GROUP BY $ORDER_STATUS"
+            "30_days" -> "SELECT $ORDER_STATUS, COUNT(*) FROM $ORDERS_TABLE WHERE $ORDER_DATE >= date('now', '-30 days') GROUP BY $ORDER_STATUS"
+            else -> "SELECT $ORDER_STATUS, COUNT(*) FROM $ORDERS_TABLE WHERE date($ORDER_DATE) = date('now') GROUP BY $ORDER_STATUS"
+        }
+
+        val cursor = db.rawQuery(query, null)
+        val result = mutableMapOf<String, Int>()
+
+        while (cursor.moveToNext()) {
+            val status = cursor.getString(0) // orderDate
+            val count = cursor.getInt(1)   // total_orders
+            result[status] = count
+        }
+
+        cursor.close()
+        db.close()
+        return result
+    }
+
+    // Get Order Revenue & Order Count
+    fun getTotalRevenueAndOrders(timeRange: String): Pair<Int, Int> {
+        val db = readableDatabase
+        var totalOrders = 0
+        var totalRevenue = 0
+
+        val query = when (timeRange) {
+            "today" -> "SELECT COUNT(*) AS order_count, SUM($ORDER_TOTAL_PRICE) AS total_revenue FROM $ORDERS_TABLE WHERE DATE($ORDER_DATE) = DATE('now')"
+            "7_days" -> "SELECT COUNT(*) AS order_count, SUM($ORDER_TOTAL_PRICE) AS total_revenue FROM $ORDERS_TABLE WHERE DATE($ORDER_DATE) >= DATE('now', '-6 days')"
+            "30_days" -> "SELECT COUNT(*) AS order_count, SUM($ORDER_TOTAL_PRICE) AS total_revenue FROM $ORDERS_TABLE WHERE DATE($ORDER_DATE) >= DATE('now', '-29 days')"
+            else -> "SELECT COUNT(*) AS order_count, SUM($ORDER_TOTAL_PRICE) AS total_revenue FROM $ORDERS_TABLE"
+        }
+
+        val cursor = db.rawQuery(query, null)
+
+        if (cursor.moveToFirst()) {
+            totalOrders = cursor.getInt(cursor.getColumnIndexOrThrow("order_count"))
+            totalRevenue = cursor.getInt(cursor.getColumnIndexOrThrow("total_revenue"))
+        }
+
+        cursor.close()
+        db.close()
+        return Pair(totalOrders, totalRevenue)
+    }
+
+    // Get Best Selling Product
+    fun getBestSellingProducts(selectedDate: String): List<OrderDetail> {
+        val db = readableDatabase
+        val productList = mutableListOf<OrderDetail>()
+
+        val query = """
+            SELECT od.$ORDER_DETAILS_PRODUCT, SUM(od.$ORDER_DETAILS_QUANTITY) AS total_sold, 
+               SUM(od.$ORDER_DETAILS_TOTAL_PRICE) AS revenue, 
+               p.$PRODUCT_COLUMN_PRICE, o.$ORDER_ID
+            FROM $ORDER_DETAILS_TABLE od
+            JOIN $ORDERS_TABLE o ON od.$COLUMN_ORDER_ID_FK = o.$ORDER_ID
+            JOIN $PRODUCTS_TABLE p ON od.$ORDER_DETAILS_PRODUCT = p.$PRODUCT_COLUMN_ID
+            WHERE DATE(o.$ORDER_DATE) = ?
+            GROUP BY od.$ORDER_DETAILS_PRODUCT
+            ORDER BY total_sold DESC
+        """.trimIndent()
+
+        val cursor = db.rawQuery(query, arrayOf(selectedDate))
+
+        while (cursor.moveToNext()) {
+            val productId = cursor.getInt(0)
+            val totalSold = cursor.getInt(1)
+            val revenue = cursor.getInt(2)
+            val productPrice = cursor.getInt(3)
+            val orderId = cursor.getInt(4) // Lấy order_id từ bảng orders
+
+            productList.add(
+                OrderDetail(
+                    id = 0, // Nếu không có ID cụ thể, bạn có thể đặt giá trị mặc định
+                    orderId = orderId,
+                    productId = productId,
+                    productPrice = productPrice,
+                    quantity = totalSold,
+                    subTotal = revenue
+                )
+            )
+        }
+        cursor.close()
+        db.close()
+        return productList
     }
 
     // Update Order Status
