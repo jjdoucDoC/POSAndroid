@@ -61,13 +61,7 @@ class EditOrderActivity : AppCompatActivity() {
 
         setUpRecyclerView()
         fetchOrderDetails()
-
-        val order = databases.getOrderByID(orderId)
-        binding.customerNameEditOrder.setText(order.customerName)
-        binding.customerPhoneEditOrder.setText(order.customerPhone)
-        binding.customerAddressEditOrder.setText(order.customerAddress)
-        binding.editDeliveryDate.setText(order.deliveryDate)
-        binding.editOrderNoteInput.setText(order.notes)
+        loadCustomerData()
 
         binding.customerDetail.setOnClickListener {
             val intent = Intent(this, CustomerActivity::class.java)
@@ -116,6 +110,10 @@ class EditOrderActivity : AppCompatActivity() {
                 Toast.makeText(this, "Cannot edit delivered order!", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
+            if(orderDetailList.isEmpty()) {
+                Toast.makeText(this, "Cannot update order with no products!", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
             updateOrder()
         }
 
@@ -137,6 +135,15 @@ class EditOrderActivity : AppCompatActivity() {
             finish()
         }
 
+    }
+
+    private fun loadCustomerData() {
+        val order = databases.getOrderByID(orderId)
+        binding.customerNameEditOrder.setText(order.customerName)
+        binding.customerPhoneEditOrder.setText(order.customerPhone)
+        binding.customerAddressEditOrder.setText(order.customerAddress)
+        binding.editDeliveryDate.setText(order.deliveryDate)
+        binding.editOrderNoteInput.setText(order.notes)
     }
 
     private fun setUpRecyclerView() {
@@ -295,7 +302,7 @@ class EditOrderActivity : AppCompatActivity() {
         val isDetailsDeleted = databases.deleteOrderDetailsByOrderID(orderId)
 
         if (!isDetailsDeleted) {
-            Toast.makeText(this, "Error to updating products!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Error to delete products!", Toast.LENGTH_SHORT).show()
             return
         }
 

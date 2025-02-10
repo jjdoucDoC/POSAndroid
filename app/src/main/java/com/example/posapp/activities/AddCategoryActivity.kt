@@ -39,6 +39,13 @@ class AddCategoryActivity : AppCompatActivity() {
             return
         }
 
+        // Kiểm tra trùng tên loại sản phẩm
+        val existsCategory = databases.getCategory().map { it.name.lowercase() }
+        if (categoryName.lowercase() in existsCategory) {
+            Toast.makeText(this, "Category already exists!", Toast.LENGTH_SHORT).show()
+            return
+        }
+
         val category = Categories(
             id = 0,
             name = categoryName)

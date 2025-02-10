@@ -15,16 +15,10 @@ import com.example.posapp.Databases
 import com.example.posapp.R
 import com.example.posapp.adapters.BestSellProductAdapter
 import com.example.posapp.databinding.FragmentReportBinding
-import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.charts.PieChart
-import com.github.mikephil.charting.components.XAxis
-import com.github.mikephil.charting.data.Entry
-import com.github.mikephil.charting.data.LineData
-import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
-import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.Locale
