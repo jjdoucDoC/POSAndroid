@@ -13,7 +13,7 @@ import java.util.Locale
 
 class ProductGridAdapter(
     private val context: Context,
-    private val productList: List<Products>,
+    private var productList: List<Products>,
     private val onGridAddToCart: (Products, View) -> Unit // Callback to handle "Add to Cart" click
 ) : RecyclerView.Adapter<ProductGridAdapter.ProductViewHolder>() {
 
@@ -47,10 +47,16 @@ class ProductGridAdapter(
         holder.bind(productList[position])
     }
 
-}
+    fun updateList(newList: List<Products>) {
+        productList = newList
+        notifyDataSetChanged()
+    }
 
     // Hàm định dạng giá tiền
     private fun formatCurrency(amount: Int): String {
         val formatter = NumberFormat.getNumberInstance(Locale("vi", "VN"))
         return "đ ${formatter.format(amount)}"
     }
+
+}
+

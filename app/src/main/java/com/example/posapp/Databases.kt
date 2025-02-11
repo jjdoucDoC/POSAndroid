@@ -553,34 +553,75 @@ class Databases(context: Context) :
     }
 
     // Get Best Selling Product
-    fun getBestSellingProducts(selectedDate: String): List<OrderDetail> {
+    fun getBestSellingProducts(timeRange: String): List<OrderDetail> {
         val db = readableDatabase
         val productList = mutableListOf<OrderDetail>()
 
-        val query = """
-            SELECT od.$ORDER_DETAILS_PRODUCT, SUM(od.$ORDER_DETAILS_QUANTITY) AS total_sold, 
-               SUM(od.$ORDER_DETAILS_TOTAL_PRICE) AS revenue, 
-               p.$PRODUCT_COLUMN_PRICE, o.$ORDER_ID
-            FROM $ORDER_DETAILS_TABLE od
-            JOIN $ORDERS_TABLE o ON od.$COLUMN_ORDER_ID_FK = o.$ORDER_ID
-            JOIN $PRODUCTS_TABLE p ON od.$ORDER_DETAILS_PRODUCT = p.$PRODUCT_COLUMN_ID
-            WHERE DATE(o.$ORDER_DATE) = ?
-            GROUP BY od.$ORDER_DETAILS_PRODUCT
-            ORDER BY total_sold DESC
-        """.trimIndent()
+        val calendar = Calendar.getInstance()
+        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
 
-        val cursor = db.rawQuery(query, arrayOf(selectedDate))
+        val (startDate, endDate) = when (timeRange) {
+            "today" -> {
+                val today = sdf.format(calendar.time)
+                today to today
+            }
+            "yesterday" -> {
+                calendar.add(Calendar.DAY_OF_YEAR, -1)
+                val yesterday = sdf.format(calendar.time)
+                yesterday to yesterday
+            }
+            "last_7_days" -> {
+                calendar.set(Calendar.DAY_OF_WEEK, calendar.firstDayOfWeek)
+                val startOfWeek = sdf.format(calendar.time)
+                calendar.add(Calendar.DAY_OF_WEEK, 6)
+                val endOfWeek = sdf.format(calendar.time)
+                startOfWeek to endOfWeek
+            }
+            "last_30_days" -> {
+                calendar.set(Calendar.DAY_OF_MONTH, 1)
+                val startOfMonth = sdf.format(calendar.time)
+                calendar.add(Calendar.MONTH, 1)
+                calendar.add(Calendar.DAY_OF_MONTH, -1)
+                val endOfMonth = sdf.format(calendar.time)
+                startOfMonth to endOfMonth
+            }
+            "this_year" -> {
+                calendar.set(Calendar.DAY_OF_YEAR, 1)
+                val startOfYear = sdf.format(calendar.time)
+                calendar.add(Calendar.YEAR, 1)
+                calendar.add(Calendar.DAY_OF_YEAR, -1)
+                val endOfYear = sdf.format(calendar.time)
+                startOfYear to endOfYear
+            }
+            else -> {
+                return emptyList() // Nếu `timeRange` không hợp lệ, trả về danh sách trống
+            }
+        }
+
+        val query = """
+                    SELECT od.$ORDER_DETAILS_PRODUCT, SUM(od.$ORDER_DETAILS_QUANTITY) AS total_sold, 
+                           SUM(od.$ORDER_DETAILS_TOTAL_PRICE) AS revenue, 
+                           p.$PRODUCT_COLUMN_PRICE, o.$ORDER_ID
+                    FROM $ORDER_DETAILS_TABLE od
+                    JOIN $ORDERS_TABLE o ON od.$COLUMN_ORDER_ID_FK = o.$ORDER_ID
+                    JOIN $PRODUCTS_TABLE p ON od.$ORDER_DETAILS_PRODUCT = p.$PRODUCT_COLUMN_ID
+                    WHERE DATE(o.$ORDER_DATE) BETWEEN ? AND ?
+                    GROUP BY od.$ORDER_DETAILS_PRODUCT
+                    ORDER BY total_sold DESC
+                """.trimIndent()
+
+        val cursor = db.rawQuery(query, arrayOf(startDate, endDate))
 
         while (cursor.moveToNext()) {
             val productId = cursor.getInt(0)
             val totalSold = cursor.getInt(1)
             val revenue = cursor.getInt(2)
             val productPrice = cursor.getInt(3)
-            val orderId = cursor.getInt(4) // Lấy order_id từ bảng orders
+            val orderId = cursor.getInt(4)
 
             productList.add(
                 OrderDetail(
-                    id = 0, // Nếu không có ID cụ thể, bạn có thể đặt giá trị mặc định
+                    id = 0,
                     orderId = orderId,
                     productId = productId,
                     productPrice = productPrice,
@@ -593,6 +634,7 @@ class Databases(context: Context) :
         db.close()
         return productList
     }
+
 
     // Update Order Status
     fun updateOrderStatus(orderID: Int, newStatus: String) : Boolean {

@@ -2,6 +2,8 @@ package com.example.posapp.activities
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -14,6 +16,7 @@ import com.example.posapp.adapters.CategoryAdapter
 import com.example.posapp.adapters.ProductAdapter
 import com.example.posapp.databinding.ActivityProductBinding
 import com.example.posapp.models.Products
+import java.util.Locale
 
 class ProductActivity : AppCompatActivity() {
 
@@ -30,6 +33,8 @@ class ProductActivity : AppCompatActivity() {
         databases = Databases(this)
         productAdapter = ProductAdapter(this, databases.getProduct())
 
+        setUpSearchProduct()
+
         binding.productRecycleView.layoutManager = LinearLayoutManager(this)
         binding.productRecycleView.adapter = productAdapter
 
@@ -42,6 +47,24 @@ class ProductActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+    }
+
+    private fun setUpSearchProduct() {
+        binding.searchProductInput.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val query = s.toString().lowercase(Locale.getDefault())
+                val filteredList = databases.getProduct().filter {
+                    it.name.lowercase(Locale.getDefault()).contains(query) ||
+                            it.id.toString().contains(query)
+                }
+                val adapter = ProductAdapter(this@ProductActivity, filteredList)
+                binding.productRecycleView.adapter = adapter
+            }
+
+            override fun afterTextChanged(s: Editable?) {}
+        })
     }
 
     override fun onResume() {

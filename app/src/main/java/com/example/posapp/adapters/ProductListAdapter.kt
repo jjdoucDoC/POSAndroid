@@ -13,7 +13,7 @@ import java.util.Locale
 
 class ProductListAdapter(
     private val context: Context,
-    private val productList: List<Products>,
+    private var productList: List<Products>,
     private val onListAddToCart: (Products, View) -> Unit
 ) : RecyclerView.Adapter<ProductListAdapter.ProductViewHolder>() {
 
@@ -44,6 +44,11 @@ class ProductListAdapter(
 
     override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
         holder.bind(productList[position])
+    }
+
+    fun updateList(newList: List<Products>) {
+        productList = newList
+        notifyDataSetChanged()
     }
 
     // Hàm định dạng giá tiền

@@ -222,7 +222,7 @@ class EditOrderActivity : AppCompatActivity() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val query = s.toString().lowercase(Locale.getDefault())
-                val filteredList = productList.filter {
+                val filteredList = databases.getProduct().filter {
                     it.name.lowercase(Locale.getDefault()).contains(query) ||
                             it.id.toString().contains(query)
                 }

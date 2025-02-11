@@ -7,6 +7,8 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -37,6 +39,7 @@ class CashierFragment : Fragment() {
 
     private var isGridView = true
     private lateinit var productList: List<Products>    // Item Product
+    private lateinit var filteredList: List<Products>   // Item Product Search
     private lateinit var cartList: MutableMap<Products, Int>    // Item Cart with Key(Product) - Value(Int)
     private lateinit var databases: Databases
 
@@ -61,11 +64,13 @@ class CashierFragment : Fragment() {
         databases = Databases(requireContext())
         productList = databases.getProduct()
         cartList = mutableMapOf()
+        filteredList = productList
 
         // Default Cart container is hide
         binding.cartContainer.visibility = View.GONE
 
         updateView()
+        setUpSearchProduct()
 
         // Toggle Product View Button
         binding.toggleViewButton.setOnClickListener {
@@ -96,15 +101,13 @@ class CashierFragment : Fragment() {
         val recyclerView = binding.productListContainer
         if (isGridView) {
             recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
-            recyclerView.adapter = ProductGridAdapter(requireContext(), productList) {
-                product, view ->
+            recyclerView.adapter = ProductGridAdapter(requireContext(), filteredList) { product, view ->
                 addToCartAnimation(view)
                 addToCart(product)
             }
         } else {
             recyclerView.layoutManager = LinearLayoutManager(requireContext())
-            recyclerView.adapter = ProductListAdapter(requireContext(), productList) {
-                product, view ->
+            recyclerView.adapter = ProductListAdapter(requireContext(), filteredList) { product, view ->
                 addToCartAnimation(view)
                 addToCart(product)
             }
@@ -279,6 +282,34 @@ class CashierFragment : Fragment() {
 
             anim.start()
         }
+    }
+
+    // Search Product function
+    private fun setUpSearchProduct() {
+        binding.searchInput.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val query = s.toString().lowercase(Locale.getDefault())
+
+                filteredList = databases.getProduct().filter {
+                    it.name.lowercase(Locale.getDefault()).contains(query) ||
+                            it.id.toString().contains(query)
+                }
+                updateView()
+
+                if(query.isNotEmpty()) {
+                    binding.searchBtn.setImageResource(R.drawable.baseline_close_24)
+                    binding.searchBtn.setOnClickListener {
+                        binding.searchInput.setText("")
+                    }
+                } else {
+                    binding.searchBtn.setImageResource(R.drawable.search_ic)
+                }
+            }
+
+            override fun afterTextChanged(s: Editable?) {}
+        })
     }
 
     override fun onDestroyView() {

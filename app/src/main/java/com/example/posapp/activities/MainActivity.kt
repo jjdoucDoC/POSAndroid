@@ -9,7 +9,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
-import com.example.posapp.fragments.AccountFragment
 import com.example.posapp.fragments.CashierFragment
 import com.example.posapp.Databases
 import com.example.posapp.fragments.HistoryFragment
@@ -81,11 +80,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 supportFragmentManager.beginTransaction()
                     .replace(R.id.fragment_container, StoreFragment()).commit()
                 updateToolbarTitle("Manage Store")  // Set title for Manage Store fragment
-            }
-            R.id.nav_account -> {
-                supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, AccountFragment()).commit()
-                updateToolbarTitle("Account")  // Set title for Account fragment
             }
             R.id.nav_logout -> {
                 val sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
