@@ -14,6 +14,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.WindowCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.posapp.Databases
 import com.example.posapp.adapters.OrderCartAdapter
@@ -37,6 +38,7 @@ class OrderActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        WindowCompat.setDecorFitsSystemWindows(window, true)
         binding = ActivityOrderBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
