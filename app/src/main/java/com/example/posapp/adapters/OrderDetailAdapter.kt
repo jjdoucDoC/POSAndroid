@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.posapp.Databases
 import com.example.posapp.databinding.ProductEditOrderItemBinding
 import com.example.posapp.models.OrderDetail
+import com.example.posapp.repository.ProductRepository
 import java.text.NumberFormat
 import java.util.Locale
 
@@ -17,8 +18,7 @@ class OrderDetailAdapter (
     private val orderDetailList: MutableList<OrderDetail>,
     private val onQuantityChanged: (OrderDetail) -> Unit
 ) : RecyclerView.Adapter<OrderDetailAdapter.OrderDetailViewHolder>() {
-
-    private val databases: Databases = Databases(context)
+    private val productRepository : ProductRepository = ProductRepository.getInstance(context)
 
     class OrderDetailViewHolder (private val binding: ProductEditOrderItemBinding) :
     RecyclerView.ViewHolder(binding.root) {
@@ -43,7 +43,7 @@ class OrderDetailAdapter (
     override fun onBindViewHolder(holder: OrderDetailAdapter.OrderDetailViewHolder, position: Int) {
         val item = orderDetailList[position]
 
-        val product = databases.getProductByID(item.productId)
+        val product = productRepository.getProductByID(item.productId)
         holder.productName.text = product.name
 
         val bitmap = BitmapFactory.decodeFile(product.imageResId)

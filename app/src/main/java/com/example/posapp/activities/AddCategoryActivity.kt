@@ -7,11 +7,12 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.posapp.Databases
 import com.example.posapp.databinding.ActivityAddCategoryBinding
 import com.example.posapp.models.Categories
+import com.example.posapp.repository.CategoryRepository
 
 class AddCategoryActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAddCategoryBinding
-    private lateinit var databases: Databases
+    private lateinit var categoryRepository: CategoryRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,7 +20,7 @@ class AddCategoryActivity : AppCompatActivity() {
         binding = ActivityAddCategoryBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        databases = Databases(this)
+        categoryRepository = CategoryRepository.getInstance(this)
 
         binding.addCatBackStoreBtn.setOnClickListener {
             finish()
@@ -40,7 +41,7 @@ class AddCategoryActivity : AppCompatActivity() {
         }
 
         // Kiểm tra trùng tên loại sản phẩm
-        val existsCategory = databases.getCategory().map { it.name.lowercase() }
+        val existsCategory = categoryRepository.getCategory().map { it.name.lowercase() }
         if (categoryName.lowercase() in existsCategory) {
             Toast.makeText(this, "Category already exists!", Toast.LENGTH_SHORT).show()
             return
@@ -49,7 +50,7 @@ class AddCategoryActivity : AppCompatActivity() {
         val category = Categories(
             id = 0,
             name = categoryName)
-        val isInserted = databases.insertCategory(category)
+        val isInserted = categoryRepository.insertCategory(category)
         if (isInserted) {
             Toast.makeText(this, "Category added successfully!", Toast.LENGTH_SHORT).show()
             finish()

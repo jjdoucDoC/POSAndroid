@@ -13,6 +13,8 @@ import com.example.posapp.activities.EditProductActivity
 import com.example.posapp.R
 import com.example.posapp.databinding.ProductItemBinding
 import com.example.posapp.models.Products
+import com.example.posapp.repository.CategoryRepository
+import com.example.posapp.repository.ProductRepository
 import java.text.NumberFormat
 import java.util.Locale
 
@@ -21,7 +23,8 @@ class ProductAdapter(
     private var productList: List<Products>
 ) : RecyclerView.Adapter<ProductAdapter.ProductViewHolder>() {
 
-    private val databases : Databases = Databases(context)
+    private val categoryRepository : CategoryRepository = CategoryRepository.getInstance(context)
+    private val productRepository : ProductRepository = ProductRepository.getInstance(context)
 
     class ProductViewHolder (private val binding: ProductItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -46,7 +49,7 @@ class ProductAdapter(
         holder.priceView.text = formatCurrency(item.price)
 
         // Fetch category name by category ID
-        val category = databases.getCategoryByID(item.category) // Get category by ID
+        val category = categoryRepository.getCategoryByID(item.category) // Get category by ID
         holder.catName.text = category.name // Display the category name
 
         // Show Edit & Delete Product Menu
@@ -69,8 +72,8 @@ class ProductAdapter(
                     }
 
                     R.id.delete_product -> {
-                        databases.deleteProduct(item.id)
-                        refreshData(databases.getProduct())
+                        productRepository.deleteProduct(item.id)
+                        refreshData(productRepository.getProduct())
                         Toast.makeText(holder.itemView.context, "Product deleted!", Toast.LENGTH_SHORT).show()
                     }
 

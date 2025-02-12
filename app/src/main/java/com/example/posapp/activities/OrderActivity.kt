@@ -21,13 +21,14 @@ import com.example.posapp.databinding.ActivityOrderBinding
 import com.example.posapp.models.OrderDetail
 import com.example.posapp.models.Orders
 import com.example.posapp.models.Products
+import com.example.posapp.repository.OrderRepository
 import java.text.NumberFormat
 import java.util.Locale
 
 class OrderActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityOrderBinding
-    private lateinit var databases: Databases
+    private lateinit var orderRepository: OrderRepository
     private lateinit var orderCartAdapter: OrderCartAdapter
 
     private val REQUEST_CUSTOMER = 1001
@@ -39,7 +40,7 @@ class OrderActivity : AppCompatActivity() {
         binding = ActivityOrderBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        databases = Databases(this)
+        orderRepository = OrderRepository.getInstance(this)
 
         // Get cartList data from intent Cashier
         val cartList = intent.getSerializableExtra("cartList") as? HashMap<Products, Int>
@@ -168,7 +169,7 @@ class OrderActivity : AppCompatActivity() {
             customerAddress = address,
             status = orderStatus
         )
-        val orderId = databases.insertOrder(order)
+        val orderId = orderRepository.insertOrder(order)
         if (orderId > 0) {
             var allDetailsInsert = true
             for ((product, quantity) in cartList) {
@@ -182,7 +183,7 @@ class OrderActivity : AppCompatActivity() {
                     quantity = quantity,
                     subTotal = subTotal
                 )
-                val detailInsert = databases.insertOrderDetails(orderDetail)
+                val detailInsert = orderRepository.insertOrderDetails(orderDetail)
                 if (!detailInsert) {
                     allDetailsInsert = false
                     break

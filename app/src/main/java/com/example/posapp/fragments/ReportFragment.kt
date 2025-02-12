@@ -15,6 +15,8 @@ import com.example.posapp.Databases
 import com.example.posapp.R
 import com.example.posapp.adapters.BestSellProductAdapter
 import com.example.posapp.databinding.FragmentReportBinding
+import com.example.posapp.repository.OrderRepository
+import com.example.posapp.repository.ProductRepository
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
@@ -26,7 +28,8 @@ import java.util.Locale
 class ReportFragment : Fragment() {
 
     private lateinit var pieChart: PieChart
-    private lateinit var databases: Databases
+    private lateinit var orderRepository: OrderRepository
+    private lateinit var  productRepository: ProductRepository
 
     private var _binding: FragmentReportBinding? = null
     private val binding get() = _binding!!
@@ -43,7 +46,9 @@ class ReportFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        databases = Databases(requireContext())
+        orderRepository = OrderRepository.getInstance(requireContext())
+        productRepository = ProductRepository.getInstance(requireContext())
+
         pieChart = binding.pieChart
         loadOrderStatistics("today", "To Day")
         showBestSellingProducts("today")
@@ -73,8 +78,8 @@ class ReportFragment : Fragment() {
     }
 
     private fun loadOrderStatistics(timeRange: String, displayText: String) {
-        val orderStats = databases.getOrderStatusCount(timeRange)
-        val (totalOrders, totalRevenue) = databases.getTotalRevenueAndOrders(timeRange)
+        val orderStats = orderRepository.getOrderStatusCount(timeRange)
+        val (totalOrders, totalRevenue) = orderRepository.getTotalRevenueAndOrders(timeRange)
 
         // Lấy số lượng đơn hàng "Shipping" và "Delivered"
         val shippingCount = orderStats["Shipping"] ?: 0
@@ -136,7 +141,7 @@ class ReportFragment : Fragment() {
     }
 
     private fun showBestSellingProducts(timeRange: String) {
-        val bestSellingProducts = databases.getBestSellingProducts(timeRange)
+        val bestSellingProducts = productRepository.getBestSellingProducts(timeRange)
         val adapter = BestSellProductAdapter(requireContext(), bestSellingProducts)
         binding.bestSellProductList.layoutManager = LinearLayoutManager(requireContext())
         binding.bestSellProductList.adapter = adapter
