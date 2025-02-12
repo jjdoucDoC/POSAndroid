@@ -9,6 +9,7 @@ import com.example.posapp.Databases
 import com.example.posapp.R
 import com.example.posapp.models.Users
 import com.example.posapp.databinding.ActivitySignUpBinding
+import com.example.posapp.repository.UserRepository
 
 class SignUpActivity : AppCompatActivity() {
 
@@ -69,7 +70,7 @@ class SignUpActivity : AppCompatActivity() {
                 email = email,
                 phone = phone,
                 passWord = password)
-            databases.insertUser(newUser)
+            UserRepository.getInstance(this).insertUser(newUser)
 
             Toast.makeText(this, "Registration successful!", Toast.LENGTH_SHORT).show()
             val intent = Intent(this, MainActivity::class.java)
@@ -78,6 +79,5 @@ class SignUpActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
-
     }
 }

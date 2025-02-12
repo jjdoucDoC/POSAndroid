@@ -21,49 +21,63 @@ class Databases(context: Context) :
 
     companion object {
         private const val DATABASE_NAME = "BizPosApp.db"
-        private const val DATABASE_VERSION = 10  // change version number when changing table structure
+        private const val DATABASE_VERSION =
+            10  // change version number when changing table structure
 
         // Users Table
-        private const val USERS_TABLE = "users"
-        private const val USER_COLUMN_ID = "id"
-        private const val USER_COLUMN_EMAIL = "email"
-        private const val USER_COLUMN_PHONE = "phone"
-        private const val USER_COLUMN_PASS = "password"
+        const val USERS_TABLE = "users"
+        const val USER_COLUMN_ID = "id"
+        const val USER_COLUMN_EMAIL = "email"
+        const val USER_COLUMN_PHONE = "phone"
+        const val USER_COLUMN_PASS = "password"
 
         // Products Table
-        private const val PRODUCTS_TABLE = "products"
-        private const val PRODUCT_COLUMN_ID = "id"
-        private const val PRODUCT_COLUMN_NAME = "name"
-        private const val PRODUCT_COLUMN_PRICE = "price"
-        private const val PRODUCT_COLUMN_IMAGE = "image"
-        private const val PRODUCT_COLUMN_CATEGORY = "categoryId"
+        const val PRODUCTS_TABLE = "products"
+        const val PRODUCT_COLUMN_ID = "id"
+        const val PRODUCT_COLUMN_NAME = "name"
+        const val PRODUCT_COLUMN_PRICE = "price"
+        const val PRODUCT_COLUMN_IMAGE = "image"
+        const val PRODUCT_COLUMN_CATEGORY = "categoryId"
 
         // Category Table
-        private const val CATEGORIES_TABLE = "categories"
-        private const val CATEGORY_COLUMN_ID = "id"
-        private const val CATEGORY_COLUMN_NAME = "name"
+        const val CATEGORIES_TABLE = "categories"
+        const val CATEGORY_COLUMN_ID = "id"
+        const val CATEGORY_COLUMN_NAME = "name"
 
         // Order Table
-        private const val ORDERS_TABLE = "orders"
-        private const val ORDER_ID = "id"
-        private const val ORDER_TOTAL_PRICE = "totalPrice"
-        private const val ORDER_DATE = "orderDate"
-        private const val DELIVERY_DATE = "deliveryDate"
-        private const val ORDER_USER = "userId"
-        private const val ORDER_NOTES = "notes"
-        private const val ORDER_CUSTOMER_NAME = "customer_name"
-        private const val ORDER_CUSTOMER_PHONE = "customer_phone"
-        private const val ORDER_CUSTOMER_ADDRESS = "customer_address"
-        private const val ORDER_STATUS = "status"
+        const val ORDERS_TABLE = "orders"
+        const val ORDER_ID = "id"
+        const val ORDER_TOTAL_PRICE = "totalPrice"
+        const val ORDER_DATE = "orderDate"
+        const val DELIVERY_DATE = "deliveryDate"
+        const val ORDER_USER = "userId"
+        const val ORDER_NOTES = "notes"
+        const val ORDER_CUSTOMER_NAME = "customer_name"
+        const val ORDER_CUSTOMER_PHONE = "customer_phone"
+        const val ORDER_CUSTOMER_ADDRESS = "customer_address"
+        const val ORDER_STATUS = "status"
 
         // Order Details Table
-        private const val ORDER_DETAILS_TABLE = "order_details"
-        private const val ORDER_DETAILS_ID = "order_detail_id"
-        private const val COLUMN_ORDER_ID_FK = "order_id"
-        private const val ORDER_DETAILS_PRODUCT = "product_id"
-        private const val COLUMN_PRODUCT_PRICE = "product_price"
-        private const val ORDER_DETAILS_QUANTITY = "quantity"
-        private const val ORDER_DETAILS_TOTAL_PRICE = "total_price"
+        const val ORDER_DETAILS_TABLE = "order_details"
+        const val ORDER_DETAILS_ID = "order_detail_id"
+        const val COLUMN_ORDER_ID_FK = "order_id"
+        const val ORDER_DETAILS_PRODUCT = "product_id"
+        const val COLUMN_PRODUCT_PRICE = "product_price"
+        const val ORDER_DETAILS_QUANTITY = "quantity"
+        const val ORDER_DETAILS_TOTAL_PRICE = "total_price"
+
+        var instance: Databases? = null
+
+        @Synchronized
+        fun getInstance(context: Context): Databases {
+            return if (instance == null) {
+                Databases(context.applicationContext).also {
+                    instance = it
+                }
+            } else {
+                instance!!
+            }
+        }
     }
 
     override fun onCreate(db: SQLiteDatabase?) {
@@ -141,18 +155,6 @@ class Databases(context: Context) :
     }
 
     /*---------------User Method--------------------------*/
-    // Add User
-    fun insertUser(users: Users): Boolean {
-        val db = writableDatabase
-        val values = ContentValues().apply {
-            put(USER_COLUMN_EMAIL, users.email)
-            put(USER_COLUMN_PHONE, users.phone)
-            put(USER_COLUMN_PASS, users.passWord)
-        }
-        val result = db.insert(USERS_TABLE, null, values)
-        db.close()
-        return result != -1L
-    }
 
     // Check Valid Login
     @SuppressLint("Range")
@@ -421,7 +423,8 @@ class Databases(context: Context) :
             val orderDate = cursor.getString(cursor.getColumnIndexOrThrow(ORDER_DATE))
             val customerName = cursor.getInt(cursor.getColumnIndexOrThrow(ORDER_CUSTOMER_NAME))
             val customerPhone = cursor.getInt(cursor.getColumnIndexOrThrow(ORDER_CUSTOMER_PHONE))
-            val customerAddress = cursor.getInt(cursor.getColumnIndexOrThrow(ORDER_CUSTOMER_ADDRESS))
+            val customerAddress =
+                cursor.getInt(cursor.getColumnIndexOrThrow(ORDER_CUSTOMER_ADDRESS))
             val status = cursor.getString(cursor.getColumnIndexOrThrow(ORDER_STATUS))
 
             val ord = Orders(
@@ -492,9 +495,19 @@ class Databases(context: Context) :
                 val productId = cursor.getInt(cursor.getColumnIndexOrThrow(ORDER_DETAILS_PRODUCT))
                 val productPrice = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_PRODUCT_PRICE))
                 val quantity = cursor.getInt(cursor.getColumnIndexOrThrow(ORDER_DETAILS_QUANTITY))
-                val subTotal = cursor.getInt(cursor.getColumnIndexOrThrow(ORDER_DETAILS_TOTAL_PRICE))
+                val subTotal =
+                    cursor.getInt(cursor.getColumnIndexOrThrow(ORDER_DETAILS_TOTAL_PRICE))
 
-                orderDetailList.add(OrderDetail(id, orderID, productId, productPrice, quantity, subTotal))
+                orderDetailList.add(
+                    OrderDetail(
+                        id,
+                        orderID,
+                        productId,
+                        productPrice,
+                        quantity,
+                        subTotal
+                    )
+                )
             } while (cursor.moveToNext())
         }
 
@@ -565,11 +578,13 @@ class Databases(context: Context) :
                 val today = sdf.format(calendar.time)
                 today to today
             }
+
             "yesterday" -> {
                 calendar.add(Calendar.DAY_OF_YEAR, -1)
                 val yesterday = sdf.format(calendar.time)
                 yesterday to yesterday
             }
+
             "last_7_days" -> {
                 calendar.set(Calendar.DAY_OF_WEEK, calendar.firstDayOfWeek)
                 val startOfWeek = sdf.format(calendar.time)
@@ -577,6 +592,7 @@ class Databases(context: Context) :
                 val endOfWeek = sdf.format(calendar.time)
                 startOfWeek to endOfWeek
             }
+
             "last_30_days" -> {
                 calendar.set(Calendar.DAY_OF_MONTH, 1)
                 val startOfMonth = sdf.format(calendar.time)
@@ -585,6 +601,7 @@ class Databases(context: Context) :
                 val endOfMonth = sdf.format(calendar.time)
                 startOfMonth to endOfMonth
             }
+
             "this_year" -> {
                 calendar.set(Calendar.DAY_OF_YEAR, 1)
                 val startOfYear = sdf.format(calendar.time)
@@ -593,6 +610,7 @@ class Databases(context: Context) :
                 val endOfYear = sdf.format(calendar.time)
                 startOfYear to endOfYear
             }
+
             else -> {
                 return emptyList() // Nếu `timeRange` không hợp lệ, trả về danh sách trống
             }
@@ -637,14 +655,14 @@ class Databases(context: Context) :
 
 
     // Update Order Status
-    fun updateOrderStatus(orderID: Int, newStatus: String) : Boolean {
+    fun updateOrderStatus(orderID: Int, newStatus: String): Boolean {
         val db = writableDatabase
         val values = ContentValues().apply {
             put(ORDER_STATUS, newStatus)
         }
         val whereClause = "$ORDER_ID = ?"
         val whereArgs = arrayOf(orderID.toString())
-        val result =  db.update(ORDERS_TABLE, values, whereClause, whereArgs)
+        val result = db.update(ORDERS_TABLE, values, whereClause, whereArgs)
         db.close()
 
         return result > 0
