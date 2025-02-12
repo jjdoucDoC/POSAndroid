@@ -9,11 +9,12 @@ import com.example.posapp.Databases
 import com.example.posapp.R
 import com.example.posapp.models.Users
 import com.example.posapp.databinding.ActivitySignUpBinding
+import com.example.posapp.repository.UserRepository
 
 class SignUpActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySignUpBinding
-    private lateinit var databases: Databases
+    private lateinit var userRepository: UserRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,7 +22,7 @@ class SignUpActivity : AppCompatActivity() {
         binding = ActivitySignUpBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        databases = Databases(this)
+        userRepository = UserRepository.getInstance(this)
 
         // Back button click
         binding.signUpBackBtn.setOnClickListener {
@@ -59,7 +60,7 @@ class SignUpActivity : AppCompatActivity() {
             }
 
             // Check Email or Phone is exsists
-            if (databases.checkUserExists(email, phone)) {
+            if (userRepository.checkUserExists(email, phone)) {
                 Toast.makeText(this, "Email or phone number already registered!", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
@@ -69,7 +70,7 @@ class SignUpActivity : AppCompatActivity() {
                 email = email,
                 phone = phone,
                 passWord = password)
-            databases.insertUser(newUser)
+            UserRepository.getInstance(this).insertUser(newUser)
 
             Toast.makeText(this, "Registration successful!", Toast.LENGTH_SHORT).show()
             val intent = Intent(this, MainActivity::class.java)
@@ -78,6 +79,5 @@ class SignUpActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
-
     }
 }

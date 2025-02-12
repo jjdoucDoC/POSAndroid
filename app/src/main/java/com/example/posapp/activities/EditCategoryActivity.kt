@@ -12,11 +12,12 @@ import com.example.posapp.Databases
 import com.example.posapp.R
 import com.example.posapp.databinding.ActivityEditCategoryBinding
 import com.example.posapp.models.Categories
+import com.example.posapp.repository.CategoryRepository
 
 class EditCategoryActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityEditCategoryBinding
-    private lateinit var databases: Databases
+    private lateinit var categoryRepository: CategoryRepository
     private var categoryId: Int = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,7 +26,7 @@ class EditCategoryActivity : AppCompatActivity() {
         binding = ActivityEditCategoryBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        databases = Databases(this)
+        categoryRepository = CategoryRepository.getInstance(this)
 
         categoryId = intent.getIntExtra("category_id", -1)
         if(categoryId == -1) {
@@ -34,7 +35,7 @@ class EditCategoryActivity : AppCompatActivity() {
         }
 
         // Get category data to input fields
-        val category = databases.getCategoryByID(categoryId)
+        val category = categoryRepository.getCategoryByID(categoryId)
         binding.editCatNameInput.setText(category.name)
 
         binding.editCategoryBtn.setOnClickListener {
@@ -51,7 +52,7 @@ class EditCategoryActivity : AppCompatActivity() {
                 "Delete Category",
                 "Are you sure you want to delete this category?"
             ) {
-                val isDeleted = databases.deleteCategory(categoryId)
+                val isDeleted = categoryRepository.deleteCategory(categoryId)
                 if (isDeleted) {
                     Toast.makeText(this, "Category deleted successfully!", Toast.LENGTH_SHORT).show()
                     finish()
@@ -71,7 +72,7 @@ class EditCategoryActivity : AppCompatActivity() {
         }
 
         // Kiểm tra trùng tên loại sản phẩm
-        val existsCategory = databases.getCategory().map { it.name.lowercase() }
+        val existsCategory = categoryRepository.getCategory().map { it.name.lowercase() }
         if (newName.lowercase() in existsCategory) {
             Toast.makeText(this, "Category already exists!", Toast.LENGTH_SHORT).show()
             return
@@ -80,7 +81,7 @@ class EditCategoryActivity : AppCompatActivity() {
         val category = Categories(
             id = categoryId,
             name = newName)
-        val isUpdated = databases.updateCategory(category)
+        val isUpdated = categoryRepository.updateCategory(category)
         if (isUpdated) {
             Toast.makeText(this, "Category updated successfully!", Toast.LENGTH_SHORT).show()
             finish()

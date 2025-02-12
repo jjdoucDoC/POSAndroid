@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.posapp.Databases
 import com.example.posapp.databinding.BestSellProductItemBinding
 import com.example.posapp.models.OrderDetail
+import com.example.posapp.repository.ProductRepository
 import java.text.NumberFormat
 import java.util.Locale
 
@@ -16,7 +17,7 @@ class BestSellProductAdapter(
     private var productList: List<OrderDetail>
 ) : RecyclerView.Adapter<BestSellProductAdapter.BestSellProductViewHolder>() {
 
-    private val databases : Databases = Databases(context)
+    private val productRepository = ProductRepository.getInstance(context)
 
     class BestSellProductViewHolder(private val binding: BestSellProductItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -40,7 +41,7 @@ class BestSellProductAdapter(
     ) {
         val item = productList[position]
 
-        val getProduct = databases.getProductByID(item.productId)
+        val getProduct = productRepository.getProductByID(item.productId)
         val bitmap = BitmapFactory.decodeFile(getProduct.imageResId)
         holder.productImg.setImageBitmap(bitmap)
 

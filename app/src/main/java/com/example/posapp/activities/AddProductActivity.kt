@@ -15,6 +15,8 @@ import com.example.posapp.Databases
 import com.example.posapp.adapters.CategoryMenuAdapter
 import com.example.posapp.databinding.ActivityAddProductBinding
 import com.example.posapp.models.Products
+import com.example.posapp.repository.CategoryRepository
+import com.example.posapp.repository.ProductRepository
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -22,7 +24,8 @@ import java.io.IOException
 class AddProductActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAddProductBinding
-    private lateinit var databases: Databases
+    private lateinit var productRepository: ProductRepository
+    private lateinit var categoryRepository: CategoryRepository
     private var selectedImageUri: Uri? = null
     private val PICK_IMAGE_REQUEST = 1
 
@@ -32,7 +35,8 @@ class AddProductActivity : AppCompatActivity() {
         binding = ActivityAddProductBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        databases = Databases(this)
+        productRepository = ProductRepository.getInstance(this)
+        categoryRepository = CategoryRepository.getInstance(this)
 
         // Category Dropdown
         setupCategoryDropdown()
@@ -80,7 +84,7 @@ class AddProductActivity : AppCompatActivity() {
             return
         }
 
-        val categoryId = databases.getCategoryIdByName(productCategory)
+        val categoryId = categoryRepository.getCategoryIdByName(productCategory)
         if (categoryId == null) {
             Toast.makeText(this, "Invalid category selected!", Toast.LENGTH_SHORT).show()
             return
@@ -92,7 +96,7 @@ class AddProductActivity : AppCompatActivity() {
             price = price,
             imageResId = imagePath,
             category = categoryId)
-        val isInserted = databases.insertProduct(product)
+        val isInserted = productRepository.insertProduct(product)
         if (isInserted) {
             Toast.makeText(this, "Product added successfully!", Toast.LENGTH_SHORT).show()
             finish()
@@ -103,7 +107,7 @@ class AddProductActivity : AppCompatActivity() {
 
     // Lấy danh sách danh mục và hiển thị trong dropdown
     private fun setupCategoryDropdown() {
-        val categories = databases.getCategory()
+        val categories = categoryRepository.getCategory()
 
         val adapter = CategoryMenuAdapter(this, categories) { selectedCategory ->
             binding.addProCatInput.setText(selectedCategory, false) // Điền vào ô nhập

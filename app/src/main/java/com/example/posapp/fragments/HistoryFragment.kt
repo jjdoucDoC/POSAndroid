@@ -11,11 +11,12 @@ import com.example.posapp.Databases
 import com.example.posapp.adapters.OrderAdapter
 import com.example.posapp.databinding.FragmentHistoryBinding
 import com.example.posapp.models.Orders
+import com.example.posapp.repository.OrderRepository
 import java.text.SimpleDateFormat
 
 class HistoryFragment : Fragment() {
 
-    private lateinit var databases: Databases
+    private lateinit var orderRepository: OrderRepository
     private lateinit var orderList: List<Orders>
     private lateinit var orderAdapter: OrderAdapter
 
@@ -34,8 +35,8 @@ class HistoryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        databases = Databases(requireContext())
-        orderList = databases.getOrder()
+        orderRepository = OrderRepository.getInstance(requireContext())
+        orderList = orderRepository.getOrder()
 
         setupRecyclerView()
 
@@ -76,7 +77,7 @@ class HistoryFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        orderAdapter.refreshData(databases.getOrder())
+        orderAdapter.refreshData(orderRepository.getOrder())
     }
 
 }

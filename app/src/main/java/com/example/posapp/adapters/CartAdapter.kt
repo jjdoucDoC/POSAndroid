@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.posapp.Databases
 import com.example.posapp.databinding.ProductSheetItemBinding
 import com.example.posapp.models.Products
+import com.example.posapp.repository.CategoryRepository
 import java.text.NumberFormat
 import java.util.Locale
 
@@ -20,7 +21,7 @@ class CartAdapter(
 
 ) : RecyclerView.Adapter<CartAdapter.CartViewHolder>() {
 
-    private val databases : Databases = Databases(context)
+    private val categoryRepository : CategoryRepository = CategoryRepository.getInstance(context)
 
     class CartViewHolder(private val binding: ProductSheetItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -55,7 +56,7 @@ class CartAdapter(
         val bitmap = BitmapFactory.decodeFile(item.imageResId)
         holder.productImage.setImageBitmap(bitmap)
 
-        val category = databases.getCategoryByID(item.category)
+        val category = categoryRepository.getCategoryByID(item.category)
         holder.catName.text = category.name
 
         // Handle decrease button click

@@ -11,11 +11,12 @@ import com.example.posapp.Databases
 import com.example.posapp.R
 import com.example.posapp.adapters.CategoryAdapter
 import com.example.posapp.databinding.ActivityCategoryBinding
+import com.example.posapp.repository.CategoryRepository
 
 class CategoryActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityCategoryBinding
-    private lateinit var databases: Databases
+    private lateinit var categoryRepository: CategoryRepository
     private lateinit var categoryAdapter: CategoryAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,8 +25,8 @@ class CategoryActivity : AppCompatActivity() {
         binding = ActivityCategoryBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        databases = Databases(this)
-        categoryAdapter = CategoryAdapter(this, databases.getCategory())
+        categoryRepository = CategoryRepository.getInstance(this)
+        categoryAdapter = CategoryAdapter(this, categoryRepository.getCategory())
 
         binding.categoryRecycleView.layoutManager = LinearLayoutManager(this)
         binding.categoryRecycleView.adapter = categoryAdapter
@@ -43,6 +44,6 @@ class CategoryActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        categoryAdapter.refreshData(databases.getCategory())
+        categoryAdapter.refreshData(categoryRepository.getCategory())
     }
 }

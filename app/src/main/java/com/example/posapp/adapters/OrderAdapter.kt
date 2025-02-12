@@ -15,6 +15,7 @@ import com.example.posapp.activities.EditOrderActivity
 import com.example.posapp.databinding.OrderItemBinding
 import com.example.posapp.models.Categories
 import com.example.posapp.models.Orders
+import com.example.posapp.repository.OrderRepository
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -82,8 +83,7 @@ class OrderAdapter(
 
     // Update Order Status From Database
     private fun updateOrderStatus(orderId: Int, newStatus: String) {
-        val db = Databases(context)
-        db.updateOrderStatus(orderId, newStatus)
+        OrderRepository.getInstance(context).updateOrderStatus(orderId, newStatus)
     }
 
     // Format Currency Function

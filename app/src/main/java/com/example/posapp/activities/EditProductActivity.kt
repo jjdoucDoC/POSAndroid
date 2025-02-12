@@ -19,6 +19,8 @@ import com.example.posapp.R
 import com.example.posapp.adapters.CategoryMenuAdapter
 import com.example.posapp.databinding.ActivityEditProductBinding
 import com.example.posapp.models.Products
+import com.example.posapp.repository.CategoryRepository
+import com.example.posapp.repository.ProductRepository
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -26,7 +28,8 @@ import java.io.IOException
 class EditProductActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityEditProductBinding
-    private lateinit var databases: Databases
+    private lateinit var productRepository: ProductRepository
+    private lateinit var categoryRepository: CategoryRepository
 
     private var productId: Int = -1
     private var selectedImageUri: Uri? = null
@@ -38,8 +41,8 @@ class EditProductActivity : AppCompatActivity() {
         binding = ActivityEditProductBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        databases = Databases(this)
-
+        productRepository = ProductRepository.getInstance(this)
+        categoryRepository = CategoryRepository.getInstance(this)
         // Category Dropdown
         setupCategoryDropdown()
 
@@ -50,12 +53,12 @@ class EditProductActivity : AppCompatActivity() {
         }
 
         // Get product data to input fields
-        val product = databases.getProductByID(productId)
+        val product = productRepository.getProductByID(productId)
         binding.editProNameInput.setText(product.name)
         binding.editProPriceInput.setText(product.price.toString())
 
         val categoryId = product.category
-        val categoryName = databases.getCategoryByID(categoryId)
+        val categoryName = categoryRepository.getCategoryByID(categoryId)
         binding.editProCatInput.setText(categoryName.name)
 
         binding.editProImage.setImageURI(Uri.parse(product.imageResId))
@@ -93,9 +96,9 @@ class EditProductActivity : AppCompatActivity() {
         }
 
         // Kiểm tra giá trị của selectedImageUri
-        val new_imagePath = if (selectedImageUri.toString() == Uri.parse(databases.getProductByID(productId).imageResId).toString()) {
+        val new_imagePath = if (selectedImageUri.toString() == Uri.parse(productRepository.getProductByID(productId).imageResId).toString()) {
             // Nếu không thay đổi hình ảnh, giữ lại đường dẫn cũ
-            databases.getProductByID(productId).imageResId
+            productRepository.getProductByID(productId).imageResId
         } else {
             // Nếu thay đổi hình ảnh, lưu hình ảnh mới
             saveImageToInternalStorage(selectedImageUri!!) ?: run {
@@ -110,7 +113,7 @@ class EditProductActivity : AppCompatActivity() {
             return
         }
 
-        val new_categoryId = databases.getCategoryIdByName(newCategory)
+        val new_categoryId = categoryRepository.getCategoryIdByName(newCategory)
         if (new_categoryId == null) {
             Toast.makeText(this, "Invalid category selected!", Toast.LENGTH_SHORT).show()
             return
@@ -122,7 +125,7 @@ class EditProductActivity : AppCompatActivity() {
             price = new_price,
             imageResId = new_imagePath,
             category = new_categoryId)
-        val isUpdated = databases.updateProduct(product)
+        val isUpdated = productRepository.updateProduct(product)
         if (isUpdated) {
             Toast.makeText(this, "Product updated successfully!", Toast.LENGTH_SHORT).show()
             finish()
@@ -133,7 +136,7 @@ class EditProductActivity : AppCompatActivity() {
 
     // Lấy danh sách danh mục và hiển thị trong dropdown
     private fun setupCategoryDropdown() {
-        val categories = databases.getCategory()
+        val categories = categoryRepository.getCategory()
 
         val adapter = CategoryMenuAdapter(this, categories) { selectedCategory ->
             binding.editProCatInput.setText(selectedCategory, false) // Điền vào ô nhập

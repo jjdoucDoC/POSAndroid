@@ -31,6 +31,7 @@ import com.example.posapp.R
 import com.example.posapp.activities.OrderActivity
 import com.example.posapp.adapters.CartAdapter
 import com.example.posapp.databinding.FragmentCashierBinding
+import com.example.posapp.repository.ProductRepository
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import java.text.NumberFormat
 import java.util.Locale
@@ -41,7 +42,7 @@ class CashierFragment : Fragment() {
     private lateinit var productList: List<Products>    // Item Product
     private lateinit var filteredList: List<Products>   // Item Product Search
     private lateinit var cartList: MutableMap<Products, Int>    // Item Cart with Key(Product) - Value(Int)
-    private lateinit var databases: Databases
+    private lateinit var productRepository: ProductRepository
 
     private val REQUEST_CODE_PLACE_ORDER = 1    // request code for clear cart
 
@@ -61,8 +62,8 @@ class CashierFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        databases = Databases(requireContext())
-        productList = databases.getProduct()
+        productRepository = ProductRepository.getInstance(requireContext())
+        productList = productRepository.getProduct()
         cartList = mutableMapOf()
         filteredList = productList
 
@@ -292,7 +293,7 @@ class CashierFragment : Fragment() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val query = s.toString().lowercase(Locale.getDefault())
 
-                filteredList = databases.getProduct().filter {
+                filteredList = productRepository.getProduct().filter {
                     it.name.lowercase(Locale.getDefault()).contains(query) ||
                             it.id.toString().contains(query)
                 }

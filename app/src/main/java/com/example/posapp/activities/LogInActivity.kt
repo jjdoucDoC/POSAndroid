@@ -9,11 +9,12 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.posapp.Databases
 import com.example.posapp.R
 import com.example.posapp.databinding.ActivityLogInBinding
+import com.example.posapp.repository.UserRepository
 
 class LogInActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLogInBinding
-    private lateinit var databases: Databases
+    private lateinit var userRepository: UserRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,7 +22,7 @@ class LogInActivity : AppCompatActivity() {
         binding = ActivityLogInBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        databases = Databases(this)
+        userRepository = UserRepository.getInstance(this)
 
         // Back button click handle
         binding.loginBackBtn.setOnClickListener {
@@ -55,7 +56,7 @@ class LogInActivity : AppCompatActivity() {
             }
 
             // Check Valid Login
-            val userId = databases.isValidUser(emailOrPhone, password)
+            val userId = userRepository.isValidUser(emailOrPhone, password)
             if (userId != -1) {
                 // Save login status
                 val sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)

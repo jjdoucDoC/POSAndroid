@@ -28,6 +28,8 @@ import com.example.posapp.databinding.ActivityEditOrderBinding
 import com.example.posapp.models.OrderDetail
 import com.example.posapp.models.Orders
 import com.example.posapp.models.Products
+import com.example.posapp.repository.OrderRepository
+import com.example.posapp.repository.ProductRepository
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import java.text.NumberFormat
 import java.util.Locale
@@ -35,7 +37,8 @@ import java.util.Locale
 class EditOrderActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityEditOrderBinding
-    private lateinit var databases: Databases
+    private lateinit var orderRepository: OrderRepository
+    private lateinit var productRepository: ProductRepository
 
     private lateinit var orderDetailAdapter: OrderDetailAdapter
     private var orderId: Int = -1
@@ -51,7 +54,8 @@ class EditOrderActivity : AppCompatActivity() {
         binding = ActivityEditOrderBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        databases = Databases(this)
+        orderRepository = OrderRepository.getInstance(this)
+        productRepository = ProductRepository.getInstance(this)
 
         orderId = intent.getIntExtra("orderId", -1)
         if (orderId == -1) {
@@ -122,7 +126,7 @@ class EditOrderActivity : AppCompatActivity() {
                 Toast.makeText(this, "Cannot delete delivered order!", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-            val isDeleted = databases.deleteOrder(orderId)
+            val isDeleted = orderRepository.deleteOrder(orderId)
             if (isDeleted) {
                 Toast.makeText(this, "Order deleted successfully!", Toast.LENGTH_SHORT).show()
                 finish()
@@ -138,7 +142,7 @@ class EditOrderActivity : AppCompatActivity() {
     }
 
     private fun loadCustomerData() {
-        val order = databases.getOrderByID(orderId)
+        val order = orderRepository.getOrderByID(orderId)
         binding.customerNameEditOrder.setText(order.customerName)
         binding.customerPhoneEditOrder.setText(order.customerPhone)
         binding.customerAddressEditOrder.setText(order.customerAddress)
@@ -159,7 +163,7 @@ class EditOrderActivity : AppCompatActivity() {
     @SuppressLint("NotifyDataSetChanged")
     private fun fetchOrderDetails() {
         try {
-            val orderDetails = databases.getOrderDetailByOrderID(orderId)
+            val orderDetails = orderRepository.getOrderDetailByOrderID(orderId)
             orderDetailList.apply {
                 clear()
                 addAll(orderDetails)
@@ -189,7 +193,7 @@ class EditOrderActivity : AppCompatActivity() {
         productRecyclerView.layoutManager = LinearLayoutManager(this)
 
         // Lấy danh sách sản phẩm từ cơ sở dữ liệu
-        productList = databases.getProduct()
+        productList = productRepository.getProduct()
 
         val productAdapter = ProductOrderAdapter(this, productList) { selectedProduct ->
             // Kiểm tra nếu sản phẩm đã có trong danh sách đơn hàng
@@ -222,7 +226,7 @@ class EditOrderActivity : AppCompatActivity() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val query = s.toString().lowercase(Locale.getDefault())
-                val filteredList = databases.getProduct().filter {
+                val filteredList = productRepository.getProduct().filter {
                     it.name.lowercase(Locale.getDefault()).contains(query) ||
                             it.id.toString().contains(query)
                 }
@@ -236,7 +240,7 @@ class EditOrderActivity : AppCompatActivity() {
     }
 
     private fun isOrderEditable() : Boolean {
-        val order = databases.getOrderByID(orderId)
+        val order = orderRepository.getOrderByID(orderId)
         val sdf = java.text.SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         val deliveryDate = sdf.parse(order.deliveryDate)
         val currentDate = java.util.Calendar.getInstance().time
@@ -272,7 +276,7 @@ class EditOrderActivity : AppCompatActivity() {
         }
 
         // Lấy userId
-        val getOrderId = databases.getOrderByID(orderId)
+        val getOrderId = orderRepository.getOrderByID(orderId)
         val userId = getOrderId.userId
         val orderDate = getOrderId.orderDate
         val orderNotes = binding.editOrderNoteInput.text.toString().trim()
@@ -292,14 +296,14 @@ class EditOrderActivity : AppCompatActivity() {
             status = orderStatus,
             orderDate = orderDate
         )
-        val isOrderUpdated = databases.updateOrder(order)
+        val isOrderUpdated = orderRepository.updateOrder(order)
         if (!isOrderUpdated) {
             Toast.makeText(this, "Order updated fail!", Toast.LENGTH_SHORT).show()
             return
         }
 
         // Xóa chi tiết đơn hàng cũ
-        val isDetailsDeleted = databases.deleteOrderDetailsByOrderID(orderId)
+        val isDetailsDeleted = orderRepository.deleteOrderDetailsByOrderID(orderId)
 
         if (!isDetailsDeleted) {
             Toast.makeText(this, "Error to delete products!", Toast.LENGTH_SHORT).show()
@@ -317,7 +321,7 @@ class EditOrderActivity : AppCompatActivity() {
                 quantity = detail.quantity,
                 subTotal = detail.subTotal
             )
-            val isInserted = databases.insertOrderDetails(newDetail)
+            val isInserted = orderRepository.insertOrderDetails(newDetail)
             if (!isInserted) {
                 allInserted = false
             }
