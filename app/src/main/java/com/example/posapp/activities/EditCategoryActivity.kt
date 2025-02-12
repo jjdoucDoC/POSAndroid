@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.WindowCompat
 import com.example.posapp.Databases
 import com.example.posapp.R
 import com.example.posapp.databinding.ActivityEditCategoryBinding
@@ -22,6 +23,7 @@ class EditCategoryActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        WindowCompat.setDecorFitsSystemWindows(window, true)
         binding = ActivityEditCategoryBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
