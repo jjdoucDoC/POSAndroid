@@ -5,6 +5,10 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
+    <!-- Quyền sử dụng vân tay -->
+    <uses-permission android:name="android.permission.USE_BIOMETRIC" />
+    <uses-feature android:name="android.hardware.fingerprint" android:required="true" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -15,11 +19,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PoSApp"
         tools:targetApi="31" >
-        <activity
-            android:name=".activities.ScrollingActivity"
-            android:exported="false"
-            android:label="@string/title_activity_scrolling"
-            android:theme="@style/Theme.PoSApp.NoActionBar" />
         <activity
             android:name=".activities.EditOrderActivity"
             android:exported="false" />

@@ -1,5 +1,6 @@
 package com.example.posapp.activities
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
@@ -74,12 +75,27 @@ class SignUpActivity : AppCompatActivity() {
                 passWord = password)
             UserRepository.getInstance(this).insertUser(newUser)
 
-            Toast.makeText(this, "Registration successful!", Toast.LENGTH_SHORT).show()
-            val intent = Intent(this, MainActivity::class.java)
-            // Clear all previous activities so it cannot return to the WelcomeActivity screen
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            startActivity(intent)
-            finish()
+            // Check Valid Login
+            val userId = userRepository.isValidUser(email, password)
+            if (userId != -1) {
+                // Save login status
+                val sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+                val editor = sharedPreferences.edit()
+                editor.putBoolean("isLoggedIn", true)
+                editor.putInt("userId", userId)
+                editor.putString("currentLoggedInUser", email)
+                editor.apply()
+
+                Toast.makeText(this, "Registration successful!", Toast.LENGTH_SHORT).show()
+
+                val intent = Intent(this, MainActivity::class.java)
+                // Xóa tất cả các hoạt động trước đó để không thể quay lại màn hình WelcomeActivity
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
+                finish()
+            } else {
+                Toast.makeText(this, "Account is invalid!", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 }

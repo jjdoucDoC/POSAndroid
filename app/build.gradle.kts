@@ -39,7 +39,9 @@ android {
 }
 
 dependencies {
-    implementation(libs.mpandroidchart.vv310)
+    implementation(libs.mpandroidchart.vv310)   // Chart Library
+    implementation(libs.androidx.biometric.v120alpha05)     // Fingerprint Library
+    implementation(libs.jbcrypt)     // Password Encryption Library
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

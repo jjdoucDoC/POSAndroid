@@ -10,6 +10,7 @@ import com.example.posapp.Databases.Companion.USER_COLUMN_ID
 import com.example.posapp.Databases.Companion.USER_COLUMN_PASS
 import com.example.posapp.Databases.Companion.USER_COLUMN_PHONE
 import com.example.posapp.models.Users
+import org.mindrot.jbcrypt.BCrypt
 
 class UserRepository(private val db : Databases) {
     companion object {
@@ -28,10 +29,11 @@ class UserRepository(private val db : Databases) {
 
     fun insertUser(users: Users): Boolean {
         val db = db.writableDatabase
+        val hashedPassword = BCrypt.hashpw(users.passWord, BCrypt.gensalt())    // Mã hóa mật khẩu
         val values = ContentValues().apply {
             put(USER_COLUMN_EMAIL, users.email)
             put(USER_COLUMN_PHONE, users.phone)
-            put(USER_COLUMN_PASS, users.passWord)
+            put(USER_COLUMN_PASS, hashedPassword)
         }
         val result = db.insert(USERS_TABLE, null, values)
         db.close()
@@ -46,16 +48,17 @@ class UserRepository(private val db : Databases) {
         val db = db.readableDatabase
         val query = """
                 SELECT * FROM $USERS_TABLE
-                WHERE ($USER_COLUMN_EMAIL = ? OR $USER_COLUMN_PHONE = ?) 
-                AND $USER_COLUMN_PASS = ?
+                WHERE $USER_COLUMN_EMAIL = ? OR $USER_COLUMN_PHONE = ?
             """.trimIndent()
-        val cursor = db.rawQuery(query, arrayOf(emailOrPhone, emailOrPhone, password))
+        val cursor = db.rawQuery(query, arrayOf(emailOrPhone, emailOrPhone))
 
-        // If the user exists, return the userId, otherwise return -1
-        val userId = if (cursor.moveToFirst()) {
-            cursor.getInt(cursor.getColumnIndex(USER_COLUMN_ID))
-        } else {
-            -1
+        var userId = -1
+
+        if (cursor.moveToFirst()) {
+            val hashedPassword = cursor.getString(cursor.getColumnIndexOrThrow(USER_COLUMN_PASS))
+            if (BCrypt.checkpw(password, hashedPassword)) { // So sánh mật khẩu
+                userId = cursor.getInt(cursor.getColumnIndexOrThrow(USER_COLUMN_ID))
+            }
         }
 
         cursor.close()
@@ -63,7 +66,7 @@ class UserRepository(private val db : Databases) {
         return userId
     }
 
-    // Check If User Exists (by Email or Phone)
+    // Check If User is Exists (by Email or Phone)
     fun checkUserExists(email: String, phone: String): Boolean {
         val db = db.readableDatabase
         val query = """

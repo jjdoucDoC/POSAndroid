@@ -16,7 +16,7 @@ import java.util.Locale
 class OrderDetailAdapter (
     private val context: Context,
     private val orderDetailList: MutableList<OrderDetail>,
-    private val onQuantityChanged: (OrderDetail) -> Unit
+    private val onQuantityChanged: (OrderDetail) -> Unit    // Callback khi so luong thay doi
 ) : RecyclerView.Adapter<OrderDetailAdapter.OrderDetailViewHolder>() {
     private val productRepository : ProductRepository = ProductRepository.getInstance(context)
 

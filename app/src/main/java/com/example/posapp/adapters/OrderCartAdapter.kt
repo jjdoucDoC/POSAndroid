@@ -14,6 +14,7 @@ class OrderCartAdapter(
     private val cartList: HashMap<Products, Int>
 ) : RecyclerView.Adapter<OrderCartAdapter.OrderCartViewHolder>() {
 
+    // Chuyen cardList sau khi Map voi Key (Product) sang dang List va gan vao productList
     private val productList = cartList.keys.toList()
 
     class OrderCartViewHolder(private val binding: ProductOrderItemBinding) : RecyclerView.ViewHolder(binding.root) {

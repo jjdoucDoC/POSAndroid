@@ -63,10 +63,6 @@ class ProductAdapter(
                     R.id.edit_product -> {
                         val intent = Intent(holder.itemView.context, EditProductActivity::class.java).apply {
                             putExtra("product_id", item.id)
-                            putExtra("name", item.name)
-                            putExtra("price", item.price)
-                            putExtra("imagePath", item.imageResId)
-                            putExtra("category", item.category)
                         }
                         holder.itemView.context.startActivity(intent)
                     }

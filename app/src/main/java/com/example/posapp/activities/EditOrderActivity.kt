@@ -43,7 +43,7 @@ class EditOrderActivity : AppCompatActivity() {
 
     private lateinit var orderDetailAdapter: OrderDetailAdapter
     private var orderId: Int = -1
-    private var orderDetailList: MutableList<OrderDetail> = mutableListOf()
+    private var orderDetailList: MutableList<OrderDetail> = mutableListOf()   // Khởi tạo danh sách rỗng để tránh lỗi NullPointerException
     private lateinit var productList: List<Products>
 
     private val REQUEST_CUSTOMER = 1001
@@ -325,7 +325,7 @@ class EditOrderActivity : AppCompatActivity() {
             )
             val isInserted = orderRepository.insertOrderDetails(newDetail)
             if (!isInserted) {
-                allInserted = false
+                allInserted = false // Neu them khong thanh cong, gan false va tiep tuc vong lap xu ly
             }
         }
 
