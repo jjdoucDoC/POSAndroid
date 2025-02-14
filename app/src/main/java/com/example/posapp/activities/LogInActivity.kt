@@ -189,6 +189,11 @@ class LogInActivity : AppCompatActivity() {
 
     // Chuyển hướng đến màn hình chính
     private fun navigateToMainActivity() {
+        val sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.putBoolean("isLoggedIn", true) // Lưu trạng thái đăng nhập
+        editor.apply()
+        
         val intent = Intent(this, MainActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
