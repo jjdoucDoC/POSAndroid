@@ -21,12 +21,9 @@
             android:icon="@drawable/store_ic"
             android:title="Manage Store"/>
 
-    </group>
-
-    <group android:checkableBehavior="single">
-
-        <item android:id="@+id/nav_logout"
-            android:title="Logout"/>
+        <item android:id="@+id/nav_account"
+            android:icon="@drawable/account_ic"
+            android:title="Account"/>
 
     </group>
 

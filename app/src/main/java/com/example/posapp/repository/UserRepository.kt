@@ -80,4 +80,21 @@ class UserRepository(private val db : Databases) {
         db.close()
         return exists
     }
+
+    // Get User By ID
+    fun getUserByID(userId: Int) : Users {
+        val db = db.readableDatabase
+        val query = "SELECT * FROM $USERS_TABLE WHERE $USER_COLUMN_ID = $userId"
+        val cursor = db.rawQuery(query, null)
+        cursor.moveToFirst()
+
+        val id = cursor.getInt(cursor.getColumnIndexOrThrow(USER_COLUMN_ID))
+        val email = cursor.getString(cursor.getColumnIndexOrThrow(USER_COLUMN_EMAIL))
+        val phone = cursor.getString(cursor.getColumnIndexOrThrow(USER_COLUMN_PHONE))
+        val password = cursor.getString(cursor.getColumnIndexOrThrow(USER_COLUMN_PASS))
+
+        cursor.close()
+        db.close()
+        return Users(id, email, phone, password)
+    }
 }

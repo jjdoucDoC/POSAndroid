@@ -11,4 +11,8 @@
     <color name="stroke_grey">#D1D1D1</color>
     <color name="grey_opacity5">#F2F2F2</color>
     <color name="green">#39ad3f</color>
+    
+    <color name="disable_foreground_grey">#42221f1f</color>
+    <color name="disable_thumb_grey">#1c000000</color>
+    <color name="enable_thumb_green">#46bdbf</color>
 </resources>

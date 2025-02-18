@@ -7,5 +7,11 @@
         <item name="android:fontFamily">@font/rubik_regular</item>
         <item name="android:height">58dp</item> <!-- Chiều cao tối thiểu -->
     </style>
+    
+    <style name="SCBSwitch" parent="Theme.AppCompat.Light">
+        <item name="colorControlActivated">@color/enable_thumb_green</item>
+        <item name="colorSwitchThumbNormal">@color/disable_foreground_grey</item>
+        <item name="android:colorForeground">@color/disable_thumb_grey</item>
+    </style>
 
 </resources>
