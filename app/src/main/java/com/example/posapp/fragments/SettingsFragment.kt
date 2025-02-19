@@ -27,6 +27,7 @@ class SettingsFragment : Fragment() {
     ): View {
         userRepository = UserRepository.getInstance(requireContext())
         _binding = FragmentSettingsBinding.inflate(inflater, container, false)
+
         return binding.root
     }
 
