@@ -188,8 +188,7 @@ class EditOrderActivity : AppCompatActivity() {
         val bottomSheetView = layoutInflater.inflate(R.layout.bottom_sheet_product, null)
         bottomSheetDialog.setContentView(bottomSheetView)
 
-        val productRecyclerView =
-            bottomSheetView.findViewById<RecyclerView>(R.id.newProduct_cart_list)
+        val productRecyclerView = bottomSheetView.findViewById<RecyclerView>(R.id.newProduct_cart_list)
         val searchProductInput = bottomSheetView.findViewById<EditText>(R.id.search_productOrder)
 
         productRecyclerView.layoutManager = LinearLayoutManager(this)
@@ -201,8 +200,7 @@ class EditOrderActivity : AppCompatActivity() {
             // Kiểm tra nếu sản phẩm đã có trong danh sách đơn hàng
             val isAlreadyInOrder = orderDetailList.any { it.productId == selectedProduct.id }
             if (isAlreadyInOrder) {
-                Toast.makeText(this, "Product already exists in order!", Toast.LENGTH_SHORT)
-                    .show()
+                Toast.makeText(this, "Product already exists in order!", Toast.LENGTH_SHORT).show()
             } else {
                 // Thêm sản phẩm vào danh sách đơn hàng
                 val newOrderDetail = OrderDetail(

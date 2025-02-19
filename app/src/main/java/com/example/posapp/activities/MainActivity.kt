@@ -17,6 +17,7 @@ import com.example.posapp.R
 import com.example.posapp.fragments.ReportFragment
 import com.example.posapp.fragments.StoreFragment
 import com.example.posapp.databinding.ActivityMainBinding
+import com.example.posapp.fragments.SettingsFragment
 import com.google.android.material.navigation.NavigationView
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -80,16 +81,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     .replace(R.id.fragment_container, StoreFragment()).commit()
                 updateToolbarTitle("Manage Store")  // Set title for Manage Store fragment
             }
-            R.id.nav_logout -> {
-                val sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-                val editor = sharedPreferences.edit()
-                editor.putBoolean("isLoggedIn", false)
-                editor.apply()
-
-                val intent = Intent(this, LogInActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                startActivity(intent)
-                finish()
+            R.id.nav_account -> {
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, SettingsFragment()).commit()
+                updateToolbarTitle("Account")
             }
         }
 

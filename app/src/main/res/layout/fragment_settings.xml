@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/grey"
+    tools:context=".fragments.SettingsFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/setting_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardView16"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="23dp"
+            android:layout_marginTop="23dp"
+            android:layout_marginBottom="40dp"
+            app:cardCornerRadius="20dp"
+            app:cardBackgroundColor="@color/grey"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0">
+
+            <ImageView
+                android:id="@+id/imageView6"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:src="@drawable/useravt"
+                android:scaleType="fitCenter"/>
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/setting_user_email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="14dp"
+            android:layout_marginTop="7dp"
+            android:text="TextView"
+            android:fontFamily="@font/rubik_medium"
+            android:textSize="22sp"
+            android:textColor="@color/text_color"
+            app:layout_constraintStart_toEndOf="@+id/cardView16"
+            app:layout_constraintTop_toTopOf="@+id/cardView16" />
+
+        <TextView
+            android:id="@+id/setting_user_phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="TextView"
+            android:fontFamily="@font/rubik_regular"
+            android:textSize="12sp"
+            android:textColor="@color/text_color"
+            app:layout_constraintStart_toStartOf="@+id/setting_user_email"
+            app:layout_constraintTop_toBottomOf="@+id/setting_user_email" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/setting_body"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/setting_header"
+        app:layout_constraintVertical_bias="0.0">
+
+        <Switch
+            android:id="@+id/switchFingerprint"
+            android:layout_width="0dp"
+            android:layout_height="57dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:fontFamily="@font/rubik_regular"
+            android:text="Biometric authentication"
+            android:textColor="@color/text_color"
+            android:textSize="16sp"
+            android:theme="@style/SCBSwitch"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/logout_btn"
+            android:layout_width="0dp"
+            android:layout_height="57dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="12dp"
+            android:text="Log out"
+            android:textColor="@color/red"
+            android:fontFamily="@font/rubik_medium"
+            android:textSize="16sp"
+            android:textAllCaps="false"
+            android:background="@drawable/button_logout_bg"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
