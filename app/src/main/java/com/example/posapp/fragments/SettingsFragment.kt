@@ -53,6 +53,7 @@ class SettingsFragment : Fragment() {
         // Get user ID
         val userId = sharedPreferences.getInt("userId", -1)
         if (userId == -1) {
+
             Toast.makeText(requireContext(), "User not logged in", Toast.LENGTH_SHORT).show()
             return
         } else {
